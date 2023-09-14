@@ -1,14 +1,76 @@
 version: 2.1
 
-jobs:
-  hello-job:
+orbs:
+  scotty-orb: cci-releng/scotty-orb@0.0.7
+
+executors:
+  ccc:
     docker:
-      - image: cimg/node:17.2.0 # the primary container, where your job's commands are run
+      - image: circleci/command-convenience:0.1
+        auth:
+          username: $DOCKER_HUB_USER
+          password: $DOCKER_HUB_PASSWORD
+
+commands:
+  set_up_container:
+    description: "Set up a container build environment"
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+      - setup_remote_docker
+      - checkout
+
+jobs:
+  scan_postgresql:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Scan server-postgres image
+          command: scan
+          environment:
+            NAME: server-postgres
+            DOCKERFILE_PATH: Dockerfile
+            DOCKER_REGISTRY: dockerhub
+            MAJOR_VERSION: 12
+          pwd: postgresql/12
+  publish_postgresql:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Build and publish server-postgres image
+          command: publish
+          environment:
+            NAME: server-postgres
+            DOCKERFILE_PATH: Dockerfile
+            DOCKER_REGISTRY: dockerhub
+            MAJOR_VERSION: 12
+          pwd: postgresql/12
 
 workflows:
   my-workflow:
     jobs:
-      - hello-job
+      - scan_postgresql:
+          context: "on-prem-publishing"
+          filters:
+            branches:
+              ignore:
+                - main
+                - /^server-\d\..+/
+      - publish_postgresql:
+          context: "on-prem-publishing"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
+      - scotty-orb/test-in-server-and-promote:
+          name: test-in-server-and-promote
+          context: "on-prem-publishing"
+          requires:
+            - publish_postgresql
+          promotion_component_list: "circleci/server-postgres"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
