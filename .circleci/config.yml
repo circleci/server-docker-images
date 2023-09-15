@@ -44,6 +44,7 @@ jobs:
             DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
             MAJOR_VERSION: 12
+            MINOR_VERSION: 16
           pwd: postgresql/12
 
 workflows:
