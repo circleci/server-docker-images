@@ -30,7 +30,7 @@ jobs:
             NAME: server-postgres
             DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
-            MAJOR_VERSION: 12
+            MAJOR_VERSION: 12.16
           pwd: postgresql/12
   publish_postgresql:
     executor: ccc
@@ -43,8 +43,7 @@ jobs:
             NAME: server-postgres
             DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
-            MAJOR_VERSION: 12
-            MINOR_VERSION: 16
+            MAJOR_VERSION: 12.16
           pwd: postgresql/12
 
 workflows:
