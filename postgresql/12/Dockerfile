@@ -78,16 +78,8 @@ RUN curl -sSL "https://ftp.samba.org/pub/cwrap/nss_wrapper-${NSS_WRAPPER_VERSION
 ENV POSTGRESQL_PG_PARTMAN_VERSION 4.7.2
 RUN curl -sSL "https://github.com/pgpartman/pg_partman/archive/v${POSTGRESQL_PG_PARTMAN_VERSION}.tar.gz" | tar -xz && \
 	cd pg_partman-${POSTGRESQL_PG_PARTMAN_VERSION} && \
-	make -j $(nproc) NO_BGW=1 install && \
+	make -j $(nproc) install && \
 	make clean
-
-# Install pg_cron
-ENV POSTGRESQL_PG_CRON_VERSION 1.6.0
-RUN curl -sSL "https://github.com/citusdata/pg_cron/archive/v${POSTGRESQL_PG_CRON_VERSION}.tar.gz" | tar -xz && \
-    cd pg_cron-${POSTGRESQL_PG_CRON_VERSION} && \
-    make -j $(nproc) && \
-    make -j $(nproc) install && \
-    make clean
 
 # Strip binaries and object files
 RUN install_packages binutils
