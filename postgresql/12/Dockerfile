@@ -36,7 +36,6 @@ RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/post
 		--with-libxml \
 		--with-libxslt \
 		--with-icu \
-		--with-llvm \
 		--with-lz4 && \
 	make -j $(nproc) world-bin && \
 	make -j $(nproc) install-world-bin && \
