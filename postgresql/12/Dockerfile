@@ -84,7 +84,7 @@ RUN curl -sSL "https://github.com/pgpartman/pg_partman/archive/v${POSTGRESQL_PG_
 RUN install_packages binutils
 RUN find "${POSTGRESQL_BASE_DIR}" -type f -name '*.o' -o -perm /u=x,g=x,o=x -exec strip {} \; || true
 
-FROM debian:11-slim
+FROM debian:12-slim
 
 ARG EXTRA_LOCALES
 ARG TARGETARCH
