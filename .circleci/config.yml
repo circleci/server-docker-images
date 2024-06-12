@@ -50,14 +50,14 @@ workflows:
   my-workflow:
     jobs:
       - scan_postgresql:
-          context: "on-prem-publishing"
+          context: "org-global"
           filters:
             branches:
               ignore:
                 - main
                 - /^server-\d\..+/
       - publish_postgresql:
-          context: "on-prem-publishing"
+          context: "org-global"
           filters:
             branches:
               only:
@@ -65,7 +65,7 @@ workflows:
                 - /^server-\d\..+/
       - scotty-orb/test-in-server-and-promote:
           name: test-in-server-and-promote
-          context: "on-prem-publishing"
+          context: "org-global"
           requires:
             - publish_postgresql
           promotion_component_list: "circleci/server-postgres"
