@@ -6,7 +6,7 @@ orbs:
 executors:
   ccc:
     docker:
-      - image: circleci/command-convenience:0.1
+      - image: circleci/command-convenience:experimental-seceng-1852
         auth:
           username: $DOCKER_HUB_USER
           password: $DOCKER_HUB_PASSWORD
