@@ -30,8 +30,8 @@ jobs:
           command: scan
           environment:
             NAME: server-postgres
-            DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
+            DOCKERFILE_PATH: Dockerfile
             MAJOR_VERSION: 12.16
           pwd: postgresql/12
   publish_postgresql:
@@ -43,8 +43,8 @@ jobs:
           command: publish
           environment:
             NAME: server-postgres
-            DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
+            DOCKERFILE_PATH: Dockerfile
             MAJOR_VERSION: 12.16
           pwd: postgresql/12
 
@@ -52,7 +52,7 @@ workflows:
   my-workflow:
     jobs:
       - scan_postgresql:
-          context: "on-prem-publishing"
+          context: "org-global"
           filters:
             branches:
               ignore:
