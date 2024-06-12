@@ -22,7 +22,7 @@ jobs:
   scan_postgresql:
     executor: ccc
     steps:
-      - set_up_container    
+      - set_up_container
       - run:
           name: Scan server-postgres image
           command: scan
