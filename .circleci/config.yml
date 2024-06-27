@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  scotty-orb: cci-releng/scotty-orb@0.0.7
+  scotty-orb: cci-releng/scotty-orb@0.0.8
 
 executors:
   ccc:
