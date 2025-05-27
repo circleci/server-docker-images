@@ -31,6 +31,18 @@ jobs:
             DOCKERFILE_PATH: Dockerfile
             MAJOR_VERSION: 12.22
           pwd: postgresql/12
+  scan_rabbitmq:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Scan server-rabbitmq image
+          command: scan
+          environment:
+            NAME: server-rabbitmq
+            DOCKERFILE_PATH: Dockerfile
+            MAJOR_VERSION: 3.12
+          pwd: rabbitmq/3
   publish_postgresql:
     executor: ccc
     steps:
@@ -44,15 +56,42 @@ jobs:
             DOCKER_REGISTRY: dockerhub
             MAJOR_VERSION: 12.22
           pwd: postgresql/12
+  publish_rabbitmq:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Build and publish server-rabbitmq image
+          command: publish
+          environment:
+            NAME: server-rabbitmq
+            DOCKERFILE_PATH: Dockerfile
+            DOCKER_REGISTRY: dockerhub
+            MAJOR_VERSION: 3.12
+          pwd: rabbitmq/3
 
 workflows:
   my-workflow:
     jobs:
+      - scan_rabbitmq:
+          context: "org-global"
+          filters:
+            branches:
+              ignore:
+                - main
+                - /^server-\d\..+/
       - scan_postgresql:
           context: "org-global"
           filters:
             branches:
               ignore:
+                - main
+                - /^server-\d\..+/
+      - publish_rabbitmq:
+          context: "org-global"
+          filters:
+            branches:
+              only:
                 - main
                 - /^server-\d\..+/
       - publish_postgresql:
@@ -67,7 +106,7 @@ workflows:
           context: "org-global"
           requires:
             - publish_postgresql
-          promotion_component_list: "circleci/server-postgres"
+          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq"
           filters:
             branches:
               only:
