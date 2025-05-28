@@ -105,6 +105,7 @@ workflows:
           name: test-in-server-and-promote
           context: "org-global"
           requires:
+            - publish_rabbitmq
             - publish_postgresql
           promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq"
           filters:
