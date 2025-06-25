@@ -64,7 +64,7 @@ workflows:
                 - /^server-\d\..+/
       - scotty-orb/test-in-server-and-promote:
           name: test-in-server-and-promote
-          context: "org-global"
+          context: ["org-global", github-readonly]
           requires:
             - publish_postgresql
           promotion_component_list: "circleci/server-postgres"
