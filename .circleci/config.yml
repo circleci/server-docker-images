@@ -29,7 +29,7 @@ jobs:
           environment:
             NAME: server-postgres
             DOCKERFILE_PATH: Dockerfile
-            MAJOR_VERSION: 12.16
+            MAJOR_VERSION: 12.22
           pwd: postgresql/12
   scan_rabbitmq:
     executor: ccc
@@ -54,7 +54,7 @@ jobs:
             NAME: server-postgres
             DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
-            MAJOR_VERSION: 12.16
+            MAJOR_VERSION: 12.22
           pwd: postgresql/12
   publish_rabbitmq:
     executor: ccc
