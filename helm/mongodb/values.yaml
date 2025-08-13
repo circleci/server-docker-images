@@ -104,7 +104,7 @@ tls:
   image:
     registry: docker.io
     repository: bitnami/nginx
-    tag: 1.19.6-debian-10-r26
+    tag: 1.29.1-debian-12-r0
     pullPolicy: IfNotPresent
 
 ## Name of the replica set
