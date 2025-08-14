@@ -1,5 +1,6 @@
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
+# Modifications copyright (C) 2025 Circle Internet Services, Inc.
 
 annotations:
   category: Infrastructure
@@ -18,13 +19,15 @@ dependencies:
   - bitnami-common
   version: 2.x.x
 description: RabbitMQ is an open source general-purpose message broker that is designed for consistent, highly-available messaging scenarios (both synchronous and asynchronous).
-home: https://bitnami.com
+home: https://github.com/CircleCI-Public/server-docker-images
 icon: https://bitnami.com/assets/stacks/rabbitmq/img/rabbitmq-stack-220x234.png
 keywords:
 - rabbitmq
 - message queue
 - AMQP
 maintainers:
+- name: CircleCI, Inc.
+  url: https://github.com/CircleCI-Public/server-docker-images
 - name: VMware, Inc.
   url: https://github.com/bitnami/charts
 name: rabbitmq

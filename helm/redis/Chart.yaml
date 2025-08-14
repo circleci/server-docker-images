@@ -1,3 +1,7 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+# Modifications copyright (C) 2025 Circle Internet Services, Inc.
+
 annotations:
   category: Database
 apiVersion: v2
@@ -11,13 +15,15 @@ dependencies:
 description: Open source, advanced key-value store. It is often referred to as a data
   structure server since keys can contain strings, hashes, lists, sets and sorted
   sets.
-home: https://github.com/bitnami/charts/tree/master/bitnami/redis
+home: https://github.com/CircleCI-Public/server-docker-images
 icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
 keywords:
 - redis
 - keyvalue
 - database
 maintainers:
+- name: CircleCI, Inc.
+  url: https://github.com/CircleCI-Public/server-docker-images
 - email: containers@bitnami.com
   name: Bitnami
 - email: cedric@desaintmartin.fr
