@@ -20,7 +20,7 @@ dependencies:
       - bitnami-common
     version: 2.x.x
 description: PostgreSQL (Postgres) is an open source object-relational database known for reliability and data integrity. ACID-compliant, it supports foreign keys, joins, views, triggers and stored procedures.
-home: https://github.com/CircleCI-Public/server-docker-images
+home: https://github.com/circleci/server-docker-images
 icon: https://bitnami.com/assets/stacks/postgresql/img/postgresql-stack-220x234.png
 keywords:
   - postgresql
@@ -31,7 +31,7 @@ keywords:
   - cluster
 maintainers:
   - name: CircleCI, Inc.
-    url: https://github.com/CircleCI-Public/server-docker-images
+    url: https://github.com/circleci/server-docker-images
   - name: VMware, Inc.
     url: https://github.com/bitnami/charts
 name: postgresql
