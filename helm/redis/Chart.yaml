@@ -15,7 +15,7 @@ dependencies:
 description: Open source, advanced key-value store. It is often referred to as a data
   structure server since keys can contain strings, hashes, lists, sets and sorted
   sets.
-home: https://github.com/CircleCI-Public/server-docker-images
+home: https://github.com/circleci/server-docker-images
 icon: https://bitnami.com/assets/stacks/redis/img/redis-stack-220x234.png
 keywords:
 - redis
@@ -23,7 +23,7 @@ keywords:
 - database
 maintainers:
 - name: CircleCI, Inc.
-  url: https://github.com/CircleCI-Public/server-docker-images
+  url: https://github.com/circleci/server-docker-images
 - email: containers@bitnami.com
   name: Bitnami
 - email: cedric@desaintmartin.fr
