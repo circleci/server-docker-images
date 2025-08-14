@@ -1,9 +1,14 @@
 version: 2.1
 
 orbs:
+  slack: circleci/slack@5.1.1
   scotty-orb: cci-releng/scotty-orb@0.0.12
 
 executors:
+  deploy:
+    docker:
+      - image: cimg/deploy:2025.01
+    resource_class: medium
   ccc:
     docker:
       - image: circleci/command-convenience:0.1
@@ -12,6 +17,13 @@ executors:
           password: $DOCKER_HUB_PASSWORD
 
 commands:
+  notify_failing_main:
+    steps:
+      - slack/notify:
+          channel: server-alerts
+          branch_pattern: main
+          event: fail
+          template: basic_fail_1
   set_up_container:
     description: "Set up a container build environment"
     steps:
@@ -19,6 +31,14 @@ commands:
       - checkout
 
 jobs:
+  validate-charts:
+    executor: deploy
+    steps:
+      - checkout
+      - run:
+          command: ./do kubeconform
+          when: always
+      - notify_failing_main
   scan_postgresql:
     executor: ccc
     steps:
@@ -73,6 +93,7 @@ jobs:
 workflows:
   my-workflow:
     jobs:
+      - validate-charts
       - scan_rabbitmq:
           context: "org-global"
           filters:
@@ -107,6 +128,7 @@ workflows:
           requires:
             - publish_rabbitmq
             - publish_postgresql
+            - validate-charts
           promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq"
           filters:
             branches:
