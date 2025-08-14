@@ -1,3 +1,7 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+# Modifications copyright (C) 2023 Circle Internet Services, Inc.
+
 FROM public.ecr.aws/bitnami/redis:6.2.1-debian-10-r13 as redis-source
 
 FROM docker.io/bitnami/minideb:buster
