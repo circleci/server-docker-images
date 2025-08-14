@@ -19,7 +19,7 @@ dependencies:
   - bitnami-common
   version: 2.x.x
 description: RabbitMQ is an open source general-purpose message broker that is designed for consistent, highly-available messaging scenarios (both synchronous and asynchronous).
-home: https://github.com/CircleCI-Public/server-docker-images
+home: https://github.com/circleci/server-docker-images
 icon: https://bitnami.com/assets/stacks/rabbitmq/img/rabbitmq-stack-220x234.png
 keywords:
 - rabbitmq
@@ -27,7 +27,7 @@ keywords:
 - AMQP
 maintainers:
 - name: CircleCI, Inc.
-  url: https://github.com/CircleCI-Public/server-docker-images
+  url: https://github.com/circleci/server-docker-images
 - name: VMware, Inc.
   url: https://github.com/bitnami/charts
 name: rabbitmq

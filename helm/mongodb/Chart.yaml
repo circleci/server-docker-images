@@ -14,7 +14,7 @@ dependencies:
   version: 1.x.x
 description: NoSQL document-oriented database that stores JSON-like documents with
   dynamic schemas, simplifying the integration of data in content-driven applications.
-home: https://github.com/CircleCI-Public/server-docker-images
+home: https://github.com/circleci/server-docker-images
 icon: https://bitnami.com/assets/stacks/mongodb/img/mongodb-stack-220x234.png
 keywords:
 - mongodb
@@ -25,7 +25,7 @@ keywords:
 - replication
 maintainers:
 - name: CircleCI, Inc.
-  url: https://github.com/CircleCI-Public/server-docker-images
+  url: https://github.com/circleci/server-docker-images
 - email: containers@bitnami.com
   name: Bitnami
 name: mongodb
