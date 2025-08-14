@@ -63,6 +63,18 @@ jobs:
             DOCKERFILE_PATH: Dockerfile
             MAJOR_VERSION: 3.12
           pwd: rabbitmq/3
+  scan_redis:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Scan server-redis image
+          command: scan
+          environment:
+            NAME: server-redis
+            DOCKERFILE_PATH: Dockerfile
+            MAJOR_VERSION: 6.2
+          pwd: redis/6.2/debian-10
   publish_postgresql:
     executor: ccc
     steps:
@@ -89,6 +101,19 @@ jobs:
             DOCKER_REGISTRY: dockerhub
             MAJOR_VERSION: 3.12
           pwd: rabbitmq/3
+  publish_redis:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Build and publish server-redis image
+          command: publish
+          environment:
+            NAME: server-rabbitmq
+            DOCKERFILE_PATH: Dockerfile
+            DOCKER_REGISTRY: dockerhub
+            MAJOR_VERSION: 6.2
+          pwd: redis/6.2/debian-10
 
 workflows:
   my-workflow:
@@ -102,6 +127,13 @@ workflows:
                 - main
                 - /^server-\d\..+/
       - scan_postgresql:
+          context: "org-global"
+          filters:
+            branches:
+              ignore:
+                - main
+                - /^server-\d\..+/
+      - scan_redis:
           context: "org-global"
           filters:
             branches:
@@ -122,14 +154,22 @@ workflows:
               only:
                 - main
                 - /^server-\d\..+/
+      - publish_redis:
+          context: "org-global"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
       - scotty-orb/test-in-server-and-promote:
           name: test-in-server-and-promote
           context: "org-global"
           requires:
             - publish_rabbitmq
             - publish_postgresql
+            - publish_redis
             - validate-charts
-          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq"
+          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci-server-redis"
           filters:
             branches:
               only:
