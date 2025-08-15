@@ -109,7 +109,7 @@ jobs:
           name: Build and publish server-redis image
           command: publish
           environment:
-            NAME: server-rabbitmq
+            NAME: server-redis
             DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
             MAJOR_VERSION: 6.2
