@@ -147,7 +147,7 @@ workflows:
             - publish_rabbitmq
             - publish_postgresql
             - publish_redis
-          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci-server-redis"
+          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci/server-redis"
           filters:
             branches:
               only:
