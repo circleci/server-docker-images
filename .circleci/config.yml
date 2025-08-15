@@ -169,7 +169,7 @@ workflows:
             - publish_postgresql
             - publish_redis
             - validate-charts
-          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci-server-redis"
+          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci/server-redis"
           filters:
             branches:
               only:
