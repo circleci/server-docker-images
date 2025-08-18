@@ -142,7 +142,7 @@ workflows:
                 - /^server-\d\..+/
       - scotty-orb/test-in-server-and-promote:
           name: test-in-server-and-promote
-          context: "org-global"
+          context: ["org-global", github-readonly]
           requires:
             - publish_rabbitmq
             - publish_postgresql
