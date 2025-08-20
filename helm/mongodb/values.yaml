@@ -13,14 +13,14 @@
 image:
   ## MongoDB registry
   ##
-  registry: docker.io
+  registry: cciserver.azurecr.io
   ## MongoDB image name
   ##
-  repository: circleci/server-mongodb
+  repository: server-mongodb
   ## MongoDB image tag
   ## ref: https://hub.docker.com/r/circleci/server-mongodb/tags/
   ##
-  tag: 3.6.22
+  tag: 3.6.23-debian-9-r181
   ## Specify a imagePullPolicy
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -42,7 +42,7 @@ image:
 
 ## String to fully override mongodb.fullname template
 ##
-# fullnameOverride:
+fullnameOverride: mongodb
 
 ## Kubernetes Cluster Domain
 ##
@@ -59,7 +59,7 @@ architecture: standalone
 
 ## Use StatefulSet instead of Deployment when deploying standalone
 ##
-useStatefulSet: false
+useStatefulSet: true
 
 ## MongoDB Authentication parameters
 ##
