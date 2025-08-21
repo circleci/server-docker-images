@@ -15,7 +15,7 @@ data:
     password_aux=`cat ${REDIS_PASSWORD_FILE}`
     export REDIS_PASSWORD=$password_aux
 {{- end }}
-    export REDISCLI_AUTH="$REDIS_PASSWORD"
+    [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD"
     response=$(
       timeout -s 3 $1 \
       redis-cli \
@@ -43,7 +43,7 @@ data:
     password_aux=`cat ${REDIS_PASSWORD_FILE}`
     export REDIS_PASSWORD=$password_aux
 {{- end }}
-    export REDISCLI_AUTH="$REDIS_PASSWORD"
+    [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD"
     response=$(
       timeout -s 3 $1 \
       redis-cli \
@@ -72,7 +72,7 @@ data:
     password_aux=`cat ${REDIS_PASSWORD_FILE}`
     export REDIS_PASSWORD=$password_aux
 {{- end }}
-    export REDISCLI_AUTH="$REDIS_PASSWORD"
+    [[ -n "$REDIS_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_PASSWORD"
     response=$(
       timeout -s 3 $1 \
       redis-cli \
@@ -116,7 +116,7 @@ data:
     password_aux=`cat ${REDIS_MASTER_PASSWORD_FILE}`
     export REDIS_MASTER_PASSWORD=$password_aux
 {{- end }}
-    export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
+    [[ -n "$REDIS_MASTER_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
     response=$(
       timeout -s 3 $1 \
       redis-cli \
@@ -142,7 +142,7 @@ data:
     password_aux=`cat ${REDIS_MASTER_PASSWORD_FILE}`
     export REDIS_MASTER_PASSWORD=$password_aux
 {{- end }}
-    export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
+    [[ -n "$REDIS_MASTER_PASSWORD" ]] && export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
     response=$(
       timeout -s 3 $1 \
       redis-cli \
