@@ -8,9 +8,9 @@ SPDX-License-Identifier: APACHE-2.0
 {{/*
 Return a resource request/limit object based on a given preset.
 These presets are for basic testing and not meant to be used in production
-{{ include "common.resources.preset" (dict "type" "nano") -}}
+{{ include "common-v2.resources.preset" (dict "type" "nano") -}}
 */}}
-{{- define "common.resources.preset" -}}
+{{- define "common-v2.resources.preset" -}}
 {{/* The limits are the requests increased by 50% (except ephemeral-storage and xlarge/2xlarge sizes)*/}}
 {{- $presets := dict 
   "nano" (dict 

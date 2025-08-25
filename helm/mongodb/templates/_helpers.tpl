@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "mongodb.name" -}}
-{{- include "common.names.name" . -}}
+{{- include "common-v1.names.name" . -}}
 {{- end -}}
 
 {{/*
@@ -12,49 +12,49 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "mongodb.fullname" -}}
-{{- include "common.names.fullname" . -}}
+{{- include "common-v1.names.fullname" . -}}
 {{- end -}}
 
 {{/*
 Return the proper MongoDB image name
 */}}
 {{- define "mongodb.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+{{ include "common-v1.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the metrics image)
 */}}
 {{- define "mongodb.metrics.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.metrics.image "global" .Values.global) }}
+{{ include "common-v1.images.image" (dict "imageRoot" .Values.metrics.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the init container volume-permissions image)
 */}}
 {{- define "mongodb.volumePermissions.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.volumePermissions.image "global" .Values.global) }}
+{{ include "common-v1.images.image" (dict "imageRoot" .Values.volumePermissions.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the init container auto-discovery image)
 */}}
 {{- define "mongodb.externalAccess.autoDiscovery.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.externalAccess.autoDiscovery.image "global" .Values.global) }}
+{{ include "common-v1.images.image" (dict "imageRoot" .Values.externalAccess.autoDiscovery.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the TLS Certs image)
 */}}
 {{- define "mongodb.tls.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.tls.image "global" .Values.global) }}
+{{ include "common-v1.images.image" (dict "imageRoot" .Values.tls.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "mongodb.imagePullSecrets" -}}
-{{ include "common.images.pullSecrets" (dict "images" (list .Values.image .Values.metrics.image .Values.volumePermissions.image) "global" .Values.global) }}
+{{ include "common-v1.images.pullSecrets" (dict "images" (list .Values.image .Values.metrics.image .Values.volumePermissions.image) "global" .Values.global) }}
 {{- end -}}
 
 {{/*

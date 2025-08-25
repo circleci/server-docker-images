@@ -3,16 +3,16 @@
 Validate MySQL required passwords are not empty.
 
 Usage:
-{{ include "common.validations.values.mysql.passwords" (dict "secret" "secretName" "subchart" false "context" $) }}
+{{ include "common-v1.validations.values.mysql.passwords" (dict "secret" "secretName" "subchart" false "context" $) }}
 Params:
   - secret - String - Required. Name of the secret where MySQL values are stored, e.g: "mysql-passwords-secret"
   - subchart - Boolean - Optional. Whether MySQL is used as subchart or not. Default: false
 */}}
-{{- define "common.validations.values.mysql.passwords" -}}
-  {{- $existingSecret := include "common.mysql.values.auth.existingSecret" . -}}
-  {{- $enabled := include "common.mysql.values.enabled" . -}}
-  {{- $architecture := include "common.mysql.values.architecture" . -}}
-  {{- $authPrefix := include "common.mysql.values.key.auth" . -}}
+{{- define "common-v1.validations.values.mysql.passwords" -}}
+  {{- $existingSecret := include "common-v1.mysql.values.auth.existingSecret" . -}}
+  {{- $enabled := include "common-v1.mysql.values.enabled" . -}}
+  {{- $architecture := include "common-v1.mysql.values.architecture" . -}}
+  {{- $authPrefix := include "common-v1.mysql.values.key.auth" . -}}
   {{- $valueKeyRootPassword := printf "%s.rootPassword" $authPrefix -}}
   {{- $valueKeyUsername := printf "%s.username" $authPrefix -}}
   {{- $valueKeyPassword := printf "%s.password" $authPrefix -}}
@@ -24,7 +24,7 @@ Params:
     {{- $requiredRootPassword := dict "valueKey" $valueKeyRootPassword "secret" .secret "field" "mysql-root-password" -}}
     {{- $requiredPasswords = append $requiredPasswords $requiredRootPassword -}}
 
-    {{- $valueUsername := include "common.utils.getValueFromKey" (dict "key" $valueKeyUsername "context" .context) }}
+    {{- $valueUsername := include "common-v1.utils.getValueFromKey" (dict "key" $valueKeyUsername "context" .context) }}
     {{- if not (empty $valueUsername) -}}
         {{- $requiredPassword := dict "valueKey" $valueKeyPassword "secret" .secret "field" "mysql-password" -}}
         {{- $requiredPasswords = append $requiredPasswords $requiredPassword -}}
@@ -35,7 +35,7 @@ Params:
         {{- $requiredPasswords = append $requiredPasswords $requiredReplicationPassword -}}
     {{- end -}}
 
-    {{- include "common.validations.values.multiple.empty" (dict "required" $requiredPasswords "context" .context) -}}
+    {{- include "common-v1.validations.values.multiple.empty" (dict "required" $requiredPasswords "context" .context) -}}
 
   {{- end -}}
 {{- end -}}
@@ -44,11 +44,11 @@ Params:
 Auxiliary function to get the right value for existingSecret.
 
 Usage:
-{{ include "common.mysql.values.auth.existingSecret" (dict "context" $) }}
+{{ include "common-v1.mysql.values.auth.existingSecret" (dict "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether MySQL is used as subchart or not. Default: false
 */}}
-{{- define "common.mysql.values.auth.existingSecret" -}}
+{{- define "common-v1.mysql.values.auth.existingSecret" -}}
   {{- if .subchart -}}
     {{- .context.Values.mysql.auth.existingSecret | quote -}}
   {{- else -}}
@@ -60,9 +60,9 @@ Params:
 Auxiliary function to get the right value for enabled mysql.
 
 Usage:
-{{ include "common.mysql.values.enabled" (dict "context" $) }}
+{{ include "common-v1.mysql.values.enabled" (dict "context" $) }}
 */}}
-{{- define "common.mysql.values.enabled" -}}
+{{- define "common-v1.mysql.values.enabled" -}}
   {{- if .subchart -}}
     {{- printf "%v" .context.Values.mysql.enabled -}}
   {{- else -}}
@@ -74,11 +74,11 @@ Usage:
 Auxiliary function to get the right value for architecture
 
 Usage:
-{{ include "common.mysql.values.architecture" (dict "subchart" "true" "context" $) }}
+{{ include "common-v1.mysql.values.architecture" (dict "subchart" "true" "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether MySQL is used as subchart or not. Default: false
 */}}
-{{- define "common.mysql.values.architecture" -}}
+{{- define "common-v1.mysql.values.architecture" -}}
   {{- if .subchart -}}
     {{- .context.Values.mysql.architecture -}}
   {{- else -}}
@@ -90,11 +90,11 @@ Params:
 Auxiliary function to get the right value for the key auth
 
 Usage:
-{{ include "common.mysql.values.key.auth" (dict "subchart" "true" "context" $) }}
+{{ include "common-v1.mysql.values.key.auth" (dict "subchart" "true" "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether MySQL is used as subchart or not. Default: false
 */}}
-{{- define "common.mysql.values.key.auth" -}}
+{{- define "common-v1.mysql.values.key.auth" -}}
   {{- if .subchart -}}
     mysql.auth
   {{- else -}}

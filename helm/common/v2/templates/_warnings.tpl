@@ -7,9 +7,9 @@ SPDX-License-Identifier: APACHE-2.0
 {{/*
 Warning about using rolling tag.
 Usage:
-{{ include "common.warnings.rollingTag" .Values.path.to.the.imageRoot }}
+{{ include "common-v2.warnings.rollingTag" .Values.path.to.the.imageRoot }}
 */}}
-{{- define "common.warnings.rollingTag" -}}
+{{- define "common-v2.warnings.rollingTag" -}}
 
 {{- if and (contains "bitnami/" .repository) (not (.tag | toString | regexFind "-r\\d+$|sha256:")) }}
 WARNING: Rolling tag detected ({{ .repository }}:{{ .tag }}), please note that it is strongly recommended to avoid using rolling tags in a production environment.
@@ -20,9 +20,9 @@ WARNING: Rolling tag detected ({{ .repository }}:{{ .tag }}), please note that i
 {{/*
 Warning about replaced images from the original.
 Usage:
-{{ include "common.warnings.modifiedImages" (dict "images" (list .Values.path.to.the.imageRoot) "context" $) }}
+{{ include "common-v2.warnings.modifiedImages" (dict "images" (list .Values.path.to.the.imageRoot) "context" $) }}
 */}}
-{{- define "common.warnings.modifiedImages" -}}
+{{- define "common-v2.warnings.modifiedImages" -}}
 {{- $affectedImages := list -}}
 {{- $printMessage := false -}}
 {{- $originalImages := .context.Chart.Annotations.images -}}
@@ -47,16 +47,16 @@ Substituted images detected:
 {{/*
 Warning about not setting the resource object in all deployments.
 Usage:
-{{ include "common.warnings.resources" (dict "sections" (list "path1" "path2") context $) }}
+{{ include "common-v2.warnings.resources" (dict "sections" (list "path1" "path2") context $) }}
 Example:
-{{- include "common.warnings.resources" (dict "sections" (list "csiProvider.provider" "server" "volumePermissions" "") "context" $) }}
+{{- include "common-v2.warnings.resources" (dict "sections" (list "csiProvider.provider" "server" "volumePermissions" "") "context" $) }}
 The list in the example assumes that the following values exist:
   - csiProvider.provider.resources
   - server.resources
   - volumePermissions.resources
   - resources
 */}}
-{{- define "common.warnings.resources" -}}
+{{- define "common-v2.warnings.resources" -}}
 {{- $values := .context.Values -}}
 {{- $printMessage := false -}}
 {{ $affectedSections := list -}}
