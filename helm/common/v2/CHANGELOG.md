@@ -27,7 +27,7 @@
 
 ## <small>2.30.1 (2025-04-30)</small>
 
-* [bitnami/common] Allows tpl in provided passwords "common.secrets.passwords.manage" (#33196) ([1f53dd8](https://github.com/bitnami/charts/commit/1f53dd862f2aca1071f5734c3ba825e3ff4fa383)), closes [#33196](https://github.com/bitnami/charts/issues/33196)
+* [bitnami/common] Allows tpl in provided passwords "common-v2.secrets.passwords.manage" (#33196) ([1f53dd8](https://github.com/bitnami/charts/commit/1f53dd862f2aca1071f5734c3ba825e3ff4fa383)), closes [#33196](https://github.com/bitnami/charts/issues/33196)
 * [bitnami/common] Restore 'Paremeters' section of the README (#32861) ([72f3f35](https://github.com/bitnami/charts/commit/72f3f353e35da99060a1662770655a12a2253887)), closes [#32861](https://github.com/bitnami/charts/issues/32861)
 
 ## 2.30.0 (2025-02-19)
@@ -42,7 +42,7 @@
 
 ## 2.29.0 (2025-01-03)
 
-* [bitnami/common] Add "common.capabilities.job.apiVersion" template (#31164) ([2ca979a](https://github.com/bitnami/charts/commit/2ca979a6add279384d60e6b35199eaf13553cefa)), closes [#31164](https://github.com/bitnami/charts/issues/31164)
+* [bitnami/common] Add "common-v2.capabilities.job.apiVersion" template (#31164) ([2ca979a](https://github.com/bitnami/charts/commit/2ca979a6add279384d60e6b35199eaf13553cefa)), closes [#31164](https://github.com/bitnami/charts/issues/31164)
 
 ## 2.28.0 (2024-12-10)
 
@@ -400,7 +400,7 @@
 
 ## <small>1.11.1 (2022-02-02)</small>
 
-* [bitnami/common] Improve "common.secrets.passwords.manage" helper (#8861) ([01477b4](https://github.com/bitnami/charts/commit/01477b42f2be362388d69da913879c52f2250ac1)), closes [#8861](https://github.com/bitnami/charts/issues/8861)
+* [bitnami/common] Improve "common-v2.secrets.passwords.manage" helper (#8861) ([01477b4](https://github.com/bitnami/charts/commit/01477b42f2be362388d69da913879c52f2250ac1)), closes [#8861](https://github.com/bitnami/charts/issues/8861)
 
 ## 1.11.0 (2022-02-01)
 

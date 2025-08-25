@@ -8,11 +8,11 @@ SPDX-License-Identifier: APACHE-2.0
 Auxiliary function to decide whether evaluate global values.
 
 Usage:
-{{ include "common.postgresql.values.use.global" (dict "key" "key-of-global" "context" $) }}
+{{ include "common-v2.postgresql.values.use.global" (dict "key" "key-of-global" "context" $) }}
 Params:
   - key - String - Required. Field to be evaluated within global, e.g: "existingSecret"
 */}}
-{{- define "common.postgresql.values.use.global" -}}
+{{- define "common-v2.postgresql.values.use.global" -}}
   {{- if .context.Values.global -}}
     {{- if .context.Values.global.postgresql -}}
       {{- index .context.Values.global.postgresql .key | quote -}}
@@ -24,10 +24,10 @@ Params:
 Auxiliary function to get the right value for existingSecret.
 
 Usage:
-{{ include "common.postgresql.values.existingSecret" (dict "context" $) }}
+{{ include "common-v2.postgresql.values.existingSecret" (dict "context" $) }}
 */}}
-{{- define "common.postgresql.values.existingSecret" -}}
-  {{- $globalValue := include "common.postgresql.values.use.global" (dict "key" "existingSecret" "context" .context) -}}
+{{- define "common-v2.postgresql.values.existingSecret" -}}
+  {{- $globalValue := include "common-v2.postgresql.values.use.global" (dict "key" "existingSecret" "context" .context) -}}
 
   {{- if .subchart -}}
     {{- default (.context.Values.postgresql.existingSecret | quote) $globalValue -}}
@@ -40,9 +40,9 @@ Usage:
 Auxiliary function to get the right value for enabled postgresql.
 
 Usage:
-{{ include "common.postgresql.values.enabled" (dict "context" $) }}
+{{ include "common-v2.postgresql.values.enabled" (dict "context" $) }}
 */}}
-{{- define "common.postgresql.values.enabled" -}}
+{{- define "common-v2.postgresql.values.enabled" -}}
   {{- if .subchart -}}
     {{- printf "%v" .context.Values.postgresql.enabled -}}
   {{- else -}}
@@ -54,12 +54,12 @@ Usage:
 Auxiliary function to get the right value for the key postgressPassword.
 
 Usage:
-{{ include "common.postgresql.values.key.postgressPassword" (dict "subchart" "true" "context" $) }}
+{{ include "common-v2.postgresql.values.key.postgressPassword" (dict "subchart" "true" "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether postgresql is used as subchart or not. Default: false
 */}}
-{{- define "common.postgresql.values.key.postgressPassword" -}}
-  {{- $globalValue := include "common.postgresql.values.use.global" (dict "key" "postgresqlUsername" "context" .context) -}}
+{{- define "common-v2.postgresql.values.key.postgressPassword" -}}
+  {{- $globalValue := include "common-v2.postgresql.values.use.global" (dict "key" "postgresqlUsername" "context" .context) -}}
 
   {{- if not $globalValue -}}
     {{- if .subchart -}}
@@ -76,11 +76,11 @@ Params:
 Auxiliary function to get the right value for enabled.replication.
 
 Usage:
-{{ include "common.postgresql.values.enabled.replication" (dict "subchart" "true" "context" $) }}
+{{ include "common-v2.postgresql.values.enabled.replication" (dict "subchart" "true" "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether postgresql is used as subchart or not. Default: false
 */}}
-{{- define "common.postgresql.values.enabled.replication" -}}
+{{- define "common-v2.postgresql.values.enabled.replication" -}}
   {{- if .subchart -}}
     {{- printf "%v" .context.Values.postgresql.replication.enabled -}}
   {{- else -}}
@@ -92,11 +92,11 @@ Params:
 Auxiliary function to get the right value for the key replication.password.
 
 Usage:
-{{ include "common.postgresql.values.key.replicationPassword" (dict "subchart" "true" "context" $) }}
+{{ include "common-v2.postgresql.values.key.replicationPassword" (dict "subchart" "true" "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether postgresql is used as subchart or not. Default: false
 */}}
-{{- define "common.postgresql.values.key.replicationPassword" -}}
+{{- define "common-v2.postgresql.values.key.replicationPassword" -}}
   {{- if .subchart -}}
     postgresql.replication.password
   {{- else -}}

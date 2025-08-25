@@ -8,11 +8,11 @@ SPDX-License-Identifier: APACHE-2.0
 Auxiliary function to get the right value for existingSecret.
 
 Usage:
-{{ include "common.mongodb.values.auth.existingSecret" (dict "context" $) }}
+{{ include "common-v2.mongodb.values.auth.existingSecret" (dict "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether MongoDb is used as subchart or not. Default: false
 */}}
-{{- define "common.mongodb.values.auth.existingSecret" -}}
+{{- define "common-v2.mongodb.values.auth.existingSecret" -}}
   {{- if .subchart -}}
     {{- .context.Values.mongodb.auth.existingSecret | quote -}}
   {{- else -}}
@@ -24,9 +24,9 @@ Params:
 Auxiliary function to get the right value for enabled mongodb.
 
 Usage:
-{{ include "common.mongodb.values.enabled" (dict "context" $) }}
+{{ include "common-v2.mongodb.values.enabled" (dict "context" $) }}
 */}}
-{{- define "common.mongodb.values.enabled" -}}
+{{- define "common-v2.mongodb.values.enabled" -}}
   {{- if .subchart -}}
     {{- printf "%v" .context.Values.mongodb.enabled -}}
   {{- else -}}
@@ -38,11 +38,11 @@ Usage:
 Auxiliary function to get the right value for the key auth
 
 Usage:
-{{ include "common.mongodb.values.key.auth" (dict "subchart" "true" "context" $) }}
+{{ include "common-v2.mongodb.values.key.auth" (dict "subchart" "true" "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether MongoDB&reg; is used as subchart or not. Default: false
 */}}
-{{- define "common.mongodb.values.key.auth" -}}
+{{- define "common-v2.mongodb.values.key.auth" -}}
   {{- if .subchart -}}
     mongodb.auth
   {{- else -}}
@@ -54,11 +54,11 @@ Params:
 Auxiliary function to get the right value for architecture
 
 Usage:
-{{ include "common.mongodb.values.architecture" (dict "subchart" "true" "context" $) }}
+{{ include "common-v2.mongodb.values.architecture" (dict "subchart" "true" "context" $) }}
 Params:
   - subchart - Boolean - Optional. Whether MongoDB&reg; is used as subchart or not. Default: false
 */}}
-{{- define "common.mongodb.values.architecture" -}}
+{{- define "common-v2.mongodb.values.architecture" -}}
   {{- if .subchart -}}
     {{- .context.Values.mongodb.architecture -}}
   {{- else -}}

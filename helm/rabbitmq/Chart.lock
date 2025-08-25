@@ -1,6 +1,6 @@
 dependencies:
-- name: common
+- name: common-v2
   repository: file://../common/v2
   version: 2.31.4
-digest: sha256:b76e9302c756c6bba98bf74e8569588cb90fa1252d0883715ef4fa2a8c0c97d0
-generated: "2025-08-25T14:50:46.044084037-03:00"
+digest: sha256:7f47630a08e03779ad72d7613bdea7f6af05fcb9f5183f9aa9303ba061adb877
+generated: "2025-08-25T15:38:48.203615161-03:00"

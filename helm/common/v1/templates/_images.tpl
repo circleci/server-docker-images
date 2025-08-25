@@ -1,9 +1,9 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Return the proper image name
-{{ include "common.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" $) }}
+{{ include "common-v1.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" $) }}
 */}}
-{{- define "common.images.image" -}}
+{{- define "common-v1.images.image" -}}
 {{- $registryName := .imageRoot.registry -}}
 {{- $repositoryName := .imageRoot.repository -}}
 {{- $tag := .imageRoot.tag | toString -}}
@@ -21,9 +21,9 @@ Return the proper image name
 
 {{/*
 Return the proper Docker Image Registry Secret Names (deprecated: use common.images.renderPullSecrets instead)
-{{ include "common.images.pullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "global" .Values.global) }}
+{{ include "common-v1.images.pullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "global" .Values.global) }}
 */}}
-{{- define "common.images.pullSecrets" -}}
+{{- define "common-v1.images.pullSecrets" -}}
   {{- $pullSecrets := list }}
 
   {{- if .global }}
@@ -48,21 +48,21 @@ imagePullSecrets:
 
 {{/*
 Return the proper Docker Image Registry Secret Names evaluating values as templates
-{{ include "common.images.renderPullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "context" $) }}
+{{ include "common-v1.images.renderPullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "context" $) }}
 */}}
-{{- define "common.images.renderPullSecrets" -}}
+{{- define "common-v1.images.renderPullSecrets" -}}
   {{- $pullSecrets := list }}
   {{- $context := .context }}
 
   {{- if $context.Values.global }}
     {{- range $context.Values.global.imagePullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" . "context" $context)) -}}
+      {{- $pullSecrets = append $pullSecrets (include "common-v1.tplvalues.render" (dict "value" . "context" $context)) -}}
     {{- end -}}
   {{- end -}}
 
   {{- range .images -}}
     {{- range .pullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" . "context" $context)) -}}
+      {{- $pullSecrets = append $pullSecrets (include "common-v1.tplvalues.render" (dict "value" . "context" $context)) -}}
     {{- end -}}
   {{- end -}}
 

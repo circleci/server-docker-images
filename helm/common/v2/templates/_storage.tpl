@@ -7,9 +7,9 @@ SPDX-License-Identifier: APACHE-2.0
 
 {{/*
 Return  the proper Storage Class
-{{ include "common.storage.class" ( dict "persistence" .Values.path.to.the.persistence "global" $) }}
+{{ include "common-v2.storage.class" ( dict "persistence" .Values.path.to.the.persistence "global" $) }}
 */}}
-{{- define "common.storage.class" -}}
+{{- define "common-v2.storage.class" -}}
 {{- $storageClass := (.global).storageClass | default .persistence.storageClass | default (.global).defaultStorageClass | default "" -}}
 {{- if $storageClass -}}
   {{- if (eq "-" $storageClass) -}}

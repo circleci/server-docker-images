@@ -5,18 +5,18 @@ SPDX-License-Identifier: APACHE-2.0
 
 {{- if .Values.networkPolicy.enabled }}
 kind: NetworkPolicy
-apiVersion: {{ include "common.capabilities.networkPolicy.apiVersion" . }}
+apiVersion: {{ include "common-v2.capabilities.networkPolicy.apiVersion" . }}
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  name: {{ include "common-v2.names.fullname" . }}
+  namespace: {{ include "common-v2.names.namespace" . | quote }}
+  labels: {{- include "common-v2.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  annotations: {{- include "common-v2.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
+  {{- $podLabels := include "common-v2.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
   podSelector:
-    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+    matchLabels: {{- include "common-v2.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
   policyTypes:
     - Ingress
     - Egress
@@ -46,9 +46,9 @@ spec:
         - port: {{ .Values.service.ports.manager }}
       to:
         - podSelector:
-            matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
+            matchLabels: {{- include "common-v2.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
     {{- if .Values.networkPolicy.extraEgress }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.rts.networkPolicy.extraEgress "context" $ ) | nindent 4 }}
+    {{- include "common-v2.tplvalues.render" ( dict "value" .Values.rts.networkPolicy.extraEgress "context" $ ) | nindent 4 }}
     {{- end }}
   {{- end }}
   ingress:
@@ -65,12 +65,12 @@ spec:
       {{- if not .Values.networkPolicy.allowExternal }}
       from:
         - podSelector:
-            matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
+            matchLabels: {{- include "common-v2.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
         - podSelector:
             matchLabels:
-              {{ include "common.names.fullname" . }}-client: "true"
+              {{ include "common-v2.names.fullname" . }}-client: "true"
         - podSelector:
-            matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 14 }}
+            matchLabels: {{- include "common-v2.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 14 }}
         {{- if .Values.networkPolicy.ingressNSMatchLabels }}
         - namespaceSelector:
             matchLabels:
@@ -87,6 +87,6 @@ spec:
         {{- end }}
       {{- end }}
     {{- if .Values.networkPolicy.extraIngress }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.networkPolicy.extraIngress "context" $ ) | nindent 4 }}
+    {{- include "common-v2.tplvalues.render" ( dict "value" .Values.networkPolicy.extraIngress "context" $ ) | nindent 4 }}
     {{- end }}
 {{- end }}

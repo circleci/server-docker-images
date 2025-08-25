@@ -7,9 +7,9 @@ SPDX-License-Identifier: APACHE-2.0
 
 {{/*
 Return a soft nodeAffinity definition
-{{ include "common.affinities.nodes.soft" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "common-v2.affinities.nodes.soft" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "common.affinities.nodes.soft" -}}
+{{- define "common-v2.affinities.nodes.soft" -}}
 preferredDuringSchedulingIgnoredDuringExecution:
   - preference:
       matchExpressions:
@@ -24,9 +24,9 @@ preferredDuringSchedulingIgnoredDuringExecution:
 
 {{/*
 Return a hard nodeAffinity definition
-{{ include "common.affinities.nodes.hard" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "common-v2.affinities.nodes.hard" (dict "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "common.affinities.nodes.hard" -}}
+{{- define "common-v2.affinities.nodes.hard" -}}
 requiredDuringSchedulingIgnoredDuringExecution:
   nodeSelectorTerms:
     - matchExpressions:
@@ -40,29 +40,29 @@ requiredDuringSchedulingIgnoredDuringExecution:
 
 {{/*
 Return a nodeAffinity definition
-{{ include "common.affinities.nodes" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "common-v2.affinities.nodes" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "common.affinities.nodes" -}}
+{{- define "common-v2.affinities.nodes" -}}
   {{- if eq .type "soft" }}
-    {{- include "common.affinities.nodes.soft" . -}}
+    {{- include "common-v2.affinities.nodes.soft" . -}}
   {{- else if eq .type "hard" }}
-    {{- include "common.affinities.nodes.hard" . -}}
+    {{- include "common-v2.affinities.nodes.hard" . -}}
   {{- end -}}
 {{- end -}}
 
 {{/*
 Return a topologyKey definition
-{{ include "common.affinities.topologyKey" (dict "topologyKey" "BAR") -}}
+{{ include "common-v2.affinities.topologyKey" (dict "topologyKey" "BAR") -}}
 */}}
-{{- define "common.affinities.topologyKey" -}}
+{{- define "common-v2.affinities.topologyKey" -}}
 {{ .topologyKey | default "kubernetes.io/hostname" -}}
 {{- end -}}
 
 {{/*
 Return a soft podAffinity/podAntiAffinity definition
-{{ include "common.affinities.pods.soft" (dict "component" "FOO" "customLabels" .Values.podLabels "extraMatchLabels" .Values.extraMatchLabels "topologyKey" "BAR" "extraPodAffinityTerms" .Values.extraPodAffinityTerms "extraNamespaces" (list "namespace1" "namespace2") "context" $) -}}
+{{ include "common-v2.affinities.pods.soft" (dict "component" "FOO" "customLabels" .Values.podLabels "extraMatchLabels" .Values.extraMatchLabels "topologyKey" "BAR" "extraPodAffinityTerms" .Values.extraPodAffinityTerms "extraNamespaces" (list "namespace1" "namespace2") "context" $) -}}
 */}}
-{{- define "common.affinities.pods.soft" -}}
+{{- define "common-v2.affinities.pods.soft" -}}
 {{- $component := default "" .component -}}
 {{- $customLabels := default (dict) .customLabels -}}
 {{- $extraMatchLabels := default (dict) .extraMatchLabels -}}
@@ -71,7 +71,7 @@ Return a soft podAffinity/podAntiAffinity definition
 preferredDuringSchedulingIgnoredDuringExecution:
   - podAffinityTerm:
       labelSelector:
-        matchLabels: {{- (include "common.labels.matchLabels" ( dict "customLabels" $customLabels "context" .context )) | nindent 10 }}
+        matchLabels: {{- (include "common-v2.labels.matchLabels" ( dict "customLabels" $customLabels "context" .context )) | nindent 10 }}
           {{- if not (empty $component) }}
           {{ printf "app.kubernetes.io/component: %s" $component }}
           {{- end }}
@@ -82,15 +82,15 @@ preferredDuringSchedulingIgnoredDuringExecution:
       namespaces:
         - {{ .context.Release.Namespace }}
         {{- with $extraNamespaces }}
-        {{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 8 }}
+        {{- include "common-v2.tplvalues.render" (dict "value" . "context" $) | nindent 8 }}
         {{- end }}
       {{- end }}
-      topologyKey: {{ include "common.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
+      topologyKey: {{ include "common-v2.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
     weight: 1
   {{- range $extraPodAffinityTerms }}
   - podAffinityTerm:
       labelSelector:
-        matchLabels: {{- (include "common.labels.matchLabels" ( dict "customLabels" $customLabels "context" $.context )) | nindent 10 }}
+        matchLabels: {{- (include "common-v2.labels.matchLabels" ( dict "customLabels" $customLabels "context" $.context )) | nindent 10 }}
           {{- if not (empty $component) }}
           {{ printf "app.kubernetes.io/component: %s" $component }}
           {{- end }}
@@ -101,19 +101,19 @@ preferredDuringSchedulingIgnoredDuringExecution:
       namespaces:
         - {{ $.context.Release.Namespace }}
         {{- with .namespaces }}
-        {{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 8 }}
+        {{- include "common-v2.tplvalues.render" (dict "value" . "context" $) | nindent 8 }}
         {{- end }}
       {{- end }}
-      topologyKey: {{ include "common.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
+      topologyKey: {{ include "common-v2.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
     weight: {{ .weight | default 1 -}}
   {{- end -}}
 {{- end -}}
 
 {{/*
 Return a hard podAffinity/podAntiAffinity definition
-{{ include "common.affinities.pods.hard" (dict "component" "FOO" "customLabels" .Values.podLabels "extraMatchLabels" .Values.extraMatchLabels "topologyKey" "BAR" "extraPodAffinityTerms" .Values.extraPodAffinityTerms "extraNamespaces" (list "namespace1" "namespace2") "context" $) -}}
+{{ include "common-v2.affinities.pods.hard" (dict "component" "FOO" "customLabels" .Values.podLabels "extraMatchLabels" .Values.extraMatchLabels "topologyKey" "BAR" "extraPodAffinityTerms" .Values.extraPodAffinityTerms "extraNamespaces" (list "namespace1" "namespace2") "context" $) -}}
 */}}
-{{- define "common.affinities.pods.hard" -}}
+{{- define "common-v2.affinities.pods.hard" -}}
 {{- $component := default "" .component -}}
 {{- $customLabels := default (dict) .customLabels -}}
 {{- $extraMatchLabels := default (dict) .extraMatchLabels -}}
@@ -121,7 +121,7 @@ Return a hard podAffinity/podAntiAffinity definition
 {{- $extraNamespaces := default (list) .extraNamespaces -}}
 requiredDuringSchedulingIgnoredDuringExecution:
   - labelSelector:
-      matchLabels: {{- (include "common.labels.matchLabels" ( dict "customLabels" $customLabels "context" .context )) | nindent 8 }}
+      matchLabels: {{- (include "common-v2.labels.matchLabels" ( dict "customLabels" $customLabels "context" .context )) | nindent 8 }}
         {{- if not (empty $component) }}
         {{ printf "app.kubernetes.io/component: %s" $component }}
         {{- end }}
@@ -132,13 +132,13 @@ requiredDuringSchedulingIgnoredDuringExecution:
     namespaces:
       - {{ .context.Release.Namespace }}
       {{- with $extraNamespaces }}
-      {{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 6 }}
+      {{- include "common-v2.tplvalues.render" (dict "value" . "context" $) | nindent 6 }}
       {{- end }}
     {{- end }}
-    topologyKey: {{ include "common.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
+    topologyKey: {{ include "common-v2.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
   {{- range $extraPodAffinityTerms }}
   - labelSelector:
-      matchLabels: {{- (include "common.labels.matchLabels" ( dict "customLabels" $customLabels "context" $.context )) | nindent 8 }}
+      matchLabels: {{- (include "common-v2.labels.matchLabels" ( dict "customLabels" $customLabels "context" $.context )) | nindent 8 }}
         {{- if not (empty $component) }}
         {{ printf "app.kubernetes.io/component: %s" $component }}
         {{- end }}
@@ -149,21 +149,21 @@ requiredDuringSchedulingIgnoredDuringExecution:
     namespaces:
       - {{ $.context.Release.Namespace }}
       {{- with .namespaces }}
-      {{- include "common.tplvalues.render" (dict "value" . "context" $) | nindent 6 }}
+      {{- include "common-v2.tplvalues.render" (dict "value" . "context" $) | nindent 6 }}
       {{- end }}
     {{- end }}
-    topologyKey: {{ include "common.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
+    topologyKey: {{ include "common-v2.affinities.topologyKey" (dict "topologyKey" .topologyKey) }}
   {{- end -}}
 {{- end -}}
 
 {{/*
 Return a podAffinity/podAntiAffinity definition
-{{ include "common.affinities.pods" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
+{{ include "common-v2.affinities.pods" (dict "type" "soft" "key" "FOO" "values" (list "BAR" "BAZ")) -}}
 */}}
-{{- define "common.affinities.pods" -}}
+{{- define "common-v2.affinities.pods" -}}
   {{- if eq .type "soft" }}
-    {{- include "common.affinities.pods.soft" . -}}
+    {{- include "common-v2.affinities.pods.soft" . -}}
   {{- else if eq .type "hard" }}
-    {{- include "common.affinities.pods.hard" . -}}
+    {{- include "common-v2.affinities.pods.hard" . -}}
   {{- end -}}
 {{- end -}}

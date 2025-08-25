@@ -7,7 +7,7 @@ annotations:
 apiVersion: v2
 appVersion: 4.4.3
 dependencies:
-- name: common
+- name: common-v1
   repository: "file://../common/v1"
   tags:
   - bitnami-common
@@ -32,4 +32,4 @@ name: mongodb
 sources:
 - https://github.com/bitnami/bitnami-docker-mongodb
 - https://mongodb.org
-version: 10.4.1
+version: 10.4.2

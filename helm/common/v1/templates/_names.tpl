@@ -2,14 +2,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "common.names.name" -}}
+{{- define "common-v1.names.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "common.names.chart" -}}
+{{- define "common-v1.names.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -18,7 +18,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "common.names.fullname" -}}
+{{- define "common-v1.names.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -36,9 +36,9 @@ Create a default fully qualified dependency name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 Usage:
-{{ include "common.names.dependency.fullname" (dict "chartName" "dependency-chart-name" "chartValues" .Values.dependency-chart "context" $) }}
+{{ include "common-v1.names.dependency.fullname" (dict "chartName" "dependency-chart-name" "chartValues" .Values.dependency-chart "context" $) }}
 */}}
-{{- define "common.names.dependency.fullname" -}}
+{{- define "common-v1.names.dependency.fullname" -}}
 {{- if .chartValues.fullnameOverride -}}
 {{- .chartValues.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -54,7 +54,7 @@ Usage:
 {{/*
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts.
 */}}
-{{- define "common.names.namespace" -}}
+{{- define "common-v1.names.namespace" -}}
 {{- if .Values.namespaceOverride -}}
 {{- .Values.namespaceOverride -}}
 {{- else -}}
@@ -65,6 +65,6 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
 {{/*
 Create a fully qualified app name adding the installation's namespace.
 */}}
-{{- define "common.names.fullname.namespace" -}}
-{{- printf "%s-%s" (include "common.names.fullname" .) (include "common.names.namespace" .) | trunc 63 | trimSuffix "-" -}}
+{{- define "common-v1.names.fullname.namespace" -}}
+{{- printf "%s-%s" (include "common-v1.names.fullname" .) (include "common-v1.names.namespace" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

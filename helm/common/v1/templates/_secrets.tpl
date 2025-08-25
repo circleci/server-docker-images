@@ -3,7 +3,7 @@
 Generate secret name.
 
 Usage:
-{{ include "common.secrets.name" (dict "existingSecret" .Values.path.to.the.existingSecret "defaultNameSuffix" "mySuffix" "context" $) }}
+{{ include "common-v1.secrets.name" (dict "existingSecret" .Values.path.to.the.existingSecret "defaultNameSuffix" "mySuffix" "context" $) }}
 
 Params:
   - existingSecret - ExistingSecret/String - Optional. The path to the existing secrets in the values.yaml given by the user
@@ -12,8 +12,8 @@ Params:
   - defaultNameSuffix - String - Optional. It is used only if we have several secrets in the same deployment.
   - context - Dict - Required. The context for the template evaluation.
 */}}
-{{- define "common.secrets.name" -}}
-{{- $name := (include "common.names.fullname" .context) -}}
+{{- define "common-v1.secrets.name" -}}
+{{- $name := (include "common-v1.names.fullname" .context) -}}
 
 {{- if .defaultNameSuffix -}}
 {{- $name = printf "%s-%s" $name .defaultNameSuffix | trunc 63 | trimSuffix "-" -}}
@@ -36,7 +36,7 @@ Params:
 Generate secret key.
 
 Usage:
-{{ include "common.secrets.key" (dict "existingSecret" .Values.path.to.the.existingSecret "key" "keyName") }}
+{{ include "common-v1.secrets.key" (dict "existingSecret" .Values.path.to.the.existingSecret "key" "keyName") }}
 
 Params:
   - existingSecret - ExistingSecret/String - Optional. The path to the existing secrets in the values.yaml given by the user
@@ -44,7 +44,7 @@ Params:
     +info: https://github.com/bitnami/charts/tree/master/bitnami/common#existingsecret
   - key - String - Required. Name of the key in the secret.
 */}}
-{{- define "common.secrets.key" -}}
+{{- define "common-v1.secrets.key" -}}
 {{- $key := .key -}}
 
 {{- if .existingSecret -}}
@@ -62,7 +62,7 @@ Params:
 Generate secret password or retrieve one if already created.
 
 Usage:
-{{ include "common.secrets.passwords.manage" (dict "secret" "secret-name" "key" "keyName" "providedValues" (list "path.to.password1" "path.to.password2") "length" 10 "strong" false "chartName" "chartName" "context" $) }}
+{{ include "common-v1.secrets.passwords.manage" (dict "secret" "secret-name" "key" "keyName" "providedValues" (list "path.to.password1" "path.to.password2") "length" 10 "strong" false "chartName" "chartName" "context" $) }}
 
 Params:
   - secret - String - Required - Name of the 'Secret' resource where the password is stored.
@@ -82,14 +82,14 @@ The order in which this function returns a secret password:
      (A new random secret password with the length specified in the 'length' parameter will be generated and returned)
 
 */}}
-{{- define "common.secrets.passwords.manage" -}}
+{{- define "common-v1.secrets.passwords.manage" -}}
 
 {{- $password := "" }}
 {{- $subchart := "" }}
 {{- $chartName := default "" .chartName }}
 {{- $passwordLength := default 10 .length }}
-{{- $providedPasswordKey := include "common.utils.getKeyFromList" (dict "keys" .providedValues "context" $.context) }}
-{{- $providedPasswordValue := include "common.utils.getValueFromKey" (dict "key" $providedPasswordKey "context" $.context) }}
+{{- $providedPasswordKey := include "common-v1.utils.getKeyFromList" (dict "keys" .providedValues "context" $.context) }}
+{{- $providedPasswordValue := include "common-v1.utils.getValueFromKey" (dict "key" $providedPasswordKey "context" $.context) }}
 {{- $secretData := (lookup "v1" "Secret" $.context.Release.Namespace .secret).data }}
 {{- if $secretData }}
   {{- if hasKey $secretData .key }}
@@ -106,9 +106,9 @@ The order in which this function returns a secret password:
   {{- end -}}
 
   {{- $requiredPassword := dict "valueKey" $providedPasswordKey "secret" .secret "field" .key "subchart" $subchart "context" $.context -}}
-  {{- $requiredPasswordError := include "common.validations.values.single.empty" $requiredPassword -}}
+  {{- $requiredPasswordError := include "common-v1.validations.values.single.empty" $requiredPassword -}}
   {{- $passwordValidationErrors := list $requiredPasswordError -}}
-  {{- include "common.errors.upgrade.passwords.empty" (dict "validationErrors" $passwordValidationErrors "context" $.context) -}}
+  {{- include "common-v1.errors.upgrade.passwords.empty" (dict "validationErrors" $passwordValidationErrors "context" $.context) -}}
 
   {{- if .strong }}
     {{- $subStr := list (lower (randAlpha 1)) (randNumeric 1) (upper (randAlpha 1)) | join "_" }}
@@ -126,13 +126,13 @@ The order in which this function returns a secret password:
 Returns whether a previous generated secret already exists
 
 Usage:
-{{ include "common.secrets.exists" (dict "secret" "secret-name" "context" $) }}
+{{ include "common-v1.secrets.exists" (dict "secret" "secret-name" "context" $) }}
 
 Params:
   - secret - String - Required - Name of the 'Secret' resource where the password is stored.
   - context - Context - Required - Parent context.
 */}}
-{{- define "common.secrets.exists" -}}
+{{- define "common-v1.secrets.exists" -}}
 {{- $secret := (lookup "v1" "Secret" $.context.Release.Namespace .secret) }}
 {{- if $secret }}
   {{- true -}}

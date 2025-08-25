@@ -7,9 +7,9 @@ SPDX-License-Identifier: APACHE-2.0
 {{/*
 Return the proper image name.
 If image tag and digest are not defined, termination fallbacks to chart appVersion.
-{{ include "common.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" .Values.global "chart" .Chart ) }}
+{{ include "common-v2.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" .Values.global "chart" .Chart ) }}
 */}}
-{{- define "common.images.image" -}}
+{{- define "common-v2.images.image" -}}
 {{- $registryName := default .imageRoot.registry ((.global).imageRegistry) -}}
 {{- $repositoryName := .imageRoot.repository -}}
 {{- $separator := ":" -}}
@@ -33,9 +33,9 @@ If image tag and digest are not defined, termination fallbacks to chart appVersi
 
 {{/*
 Return the proper Docker Image Registry Secret Names (deprecated: use common.images.renderPullSecrets instead)
-{{ include "common.images.pullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "global" .Values.global) }}
+{{ include "common-v2.images.pullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "global" .Values.global) }}
 */}}
-{{- define "common.images.pullSecrets" -}}
+{{- define "common-v2.images.pullSecrets" -}}
   {{- $pullSecrets := list }}
 
   {{- range ((.global).imagePullSecrets) -}}
@@ -66,26 +66,26 @@ imagePullSecrets:
 
 {{/*
 Return the proper Docker Image Registry Secret Names evaluating values as templates
-{{ include "common.images.renderPullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "context" $) }}
+{{ include "common-v2.images.renderPullSecrets" ( dict "images" (list .Values.path.to.the.image1, .Values.path.to.the.image2) "context" $) }}
 */}}
-{{- define "common.images.renderPullSecrets" -}}
+{{- define "common-v2.images.renderPullSecrets" -}}
   {{- $pullSecrets := list }}
   {{- $context := .context }}
 
   {{- range (($context.Values.global).imagePullSecrets) -}}
     {{- if kindIs "map" . -}}
-      {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" .name "context" $context)) -}}
+      {{- $pullSecrets = append $pullSecrets (include "common-v2.tplvalues.render" (dict "value" .name "context" $context)) -}}
     {{- else -}}
-      {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" . "context" $context)) -}}
+      {{- $pullSecrets = append $pullSecrets (include "common-v2.tplvalues.render" (dict "value" . "context" $context)) -}}
     {{- end -}}
   {{- end -}}
 
   {{- range .images -}}
     {{- range .pullSecrets -}}
       {{- if kindIs "map" . -}}
-        {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" .name "context" $context)) -}}
+        {{- $pullSecrets = append $pullSecrets (include "common-v2.tplvalues.render" (dict "value" .name "context" $context)) -}}
       {{- else -}}
-        {{- $pullSecrets = append $pullSecrets (include "common.tplvalues.render" (dict "value" . "context" $context)) -}}
+        {{- $pullSecrets = append $pullSecrets (include "common-v2.tplvalues.render" (dict "value" . "context" $context)) -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
@@ -100,9 +100,9 @@ imagePullSecrets:
 
 {{/*
 Return the proper image version (ingores image revision/prerelease info & fallbacks to chart appVersion)
-{{ include "common.images.version" ( dict "imageRoot" .Values.path.to.the.image "chart" .Chart ) }}
+{{ include "common-v2.images.version" ( dict "imageRoot" .Values.path.to.the.image "chart" .Chart ) }}
 */}}
-{{- define "common.images.version" -}}
+{{- define "common-v2.images.version" -}}
 {{- $imageTag := .imageRoot.tag | toString -}}
 {{/* regexp from https://github.com/Masterminds/semver/blob/23f51de38a0866c5ef0bfc42b3f735c73107b700/version.go#L41-L44 */}}
 {{- if regexMatch `^([0-9]+)(\.[0-9]+)?(\.[0-9]+)?(-([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?(\+([0-9A-Za-z\-]+(\.[0-9A-Za-z\-]+)*))?$` $imageTag -}}

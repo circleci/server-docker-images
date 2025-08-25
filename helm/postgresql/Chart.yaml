@@ -15,7 +15,7 @@ annotations:
 apiVersion: v2
 appVersion: 15.4.0
 dependencies:
-  - name: common
+  - name: common-v2
     repository: "file://../common/v2"
     tags:
       - bitnami-common
@@ -38,4 +38,4 @@ maintainers:
 name: postgresql
 sources:
   - https://github.com/bitnami/charts/tree/main/bitnami/postgresql
-version: 12.10.2
+version: 12.10.3

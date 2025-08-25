@@ -8,16 +8,16 @@ SPDX-License-Identifier: APACHE-2.0
 {{/*
 Return the target Kubernetes version
 */}}
-{{- define "common.capabilities.kubeVersion" -}}
+{{- define "common-v2.capabilities.kubeVersion" -}}
 {{- default (default .Capabilities.KubeVersion.Version .Values.kubeVersion) ((.Values.global).kubeVersion) -}}
 {{- end -}}
 
 {{/*
 Return true if the apiVersion is supported
 Usage:
-{{ include "common.capabilities.apiVersions.has" (dict "version" "batch/v1" "context" $) }}
+{{ include "common-v2.capabilities.apiVersions.has" (dict "version" "batch/v1" "context" $) }}
 */}}
-{{- define "common.capabilities.apiVersions.has" -}}
+{{- define "common-v2.capabilities.apiVersions.has" -}}
 {{- $providedAPIVersions := default .context.Values.apiVersions ((.context.Values.global).apiVersions) -}}
 {{- if and (empty $providedAPIVersions) (.context.Capabilities.APIVersions.Has .version) -}}
     {{- true -}}
@@ -29,93 +29,93 @@ Usage:
 {{/*
 Return the appropriate apiVersion for poddisruptionbudget.
 */}}
-{{- define "common.capabilities.policy.apiVersion" -}}
+{{- define "common-v2.capabilities.policy.apiVersion" -}}
 {{- print "policy/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for networkpolicy.
 */}}
-{{- define "common.capabilities.networkPolicy.apiVersion" -}}
+{{- define "common-v2.capabilities.networkPolicy.apiVersion" -}}
 {{- print "networking.k8s.io/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for job.
 */}}
-{{- define "common.capabilities.job.apiVersion" -}}
+{{- define "common-v2.capabilities.job.apiVersion" -}}
 {{- print "batch/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for cronjob.
 */}}
-{{- define "common.capabilities.cronjob.apiVersion" -}}
+{{- define "common-v2.capabilities.cronjob.apiVersion" -}}
 {{- print "batch/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for daemonset.
 */}}
-{{- define "common.capabilities.daemonset.apiVersion" -}}
+{{- define "common-v2.capabilities.daemonset.apiVersion" -}}
 {{- print "apps/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for deployment.
 */}}
-{{- define "common.capabilities.deployment.apiVersion" -}}
+{{- define "common-v2.capabilities.deployment.apiVersion" -}}
 {{- print "apps/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for statefulset.
 */}}
-{{- define "common.capabilities.statefulset.apiVersion" -}}
+{{- define "common-v2.capabilities.statefulset.apiVersion" -}}
 {{- print "apps/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for ingress.
 */}}
-{{- define "common.capabilities.ingress.apiVersion" -}}
+{{- define "common-v2.capabilities.ingress.apiVersion" -}}
 {{- print "networking.k8s.io/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for RBAC resources.
 */}}
-{{- define "common.capabilities.rbac.apiVersion" -}}
+{{- define "common-v2.capabilities.rbac.apiVersion" -}}
 {{- print "rbac.authorization.k8s.io/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for CRDs.
 */}}
-{{- define "common.capabilities.crd.apiVersion" -}}
+{{- define "common-v2.capabilities.crd.apiVersion" -}}
 {{- print "apiextensions.k8s.io/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for APIService.
 */}}
-{{- define "common.capabilities.apiService.apiVersion" -}}
+{{- define "common-v2.capabilities.apiService.apiVersion" -}}
 {{- print "apiregistration.k8s.io/v1" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for Horizontal Pod Autoscaler.
 */}}
-{{- define "common.capabilities.hpa.apiVersion" -}}
-{{- $kubeVersion := include "common.capabilities.kubeVersion" .context -}}
+{{- define "common-v2.capabilities.hpa.apiVersion" -}}
+{{- $kubeVersion := include "common-v2.capabilities.kubeVersion" .context -}}
 {{- print "autoscaling/v2" -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for Vertical Pod Autoscaler.
 */}}
-{{- define "common.capabilities.vpa.apiVersion" -}}
-{{- $kubeVersion := include "common.capabilities.kubeVersion" . -}}
+{{- define "common-v2.capabilities.vpa.apiVersion" -}}
+{{- $kubeVersion := include "common-v2.capabilities.kubeVersion" . -}}
 {{- if and (not (empty $kubeVersion)) (semverCompare "<1.25-0" $kubeVersion) -}}
 {{- print "autoscaling/v1beta2" -}}
 {{- else -}}
@@ -126,8 +126,8 @@ Return the appropriate apiVersion for Vertical Pod Autoscaler.
 {{/*
 Returns true if PodSecurityPolicy is supported
 */}}
-{{- define "common.capabilities.psp.supported" -}}
-{{- $kubeVersion := include "common.capabilities.kubeVersion" . -}}
+{{- define "common-v2.capabilities.psp.supported" -}}
+{{- $kubeVersion := include "common-v2.capabilities.kubeVersion" . -}}
 {{- if or (empty $kubeVersion) (semverCompare "<1.25-0" $kubeVersion) -}}
   {{- true -}}
 {{- end -}}
@@ -136,16 +136,16 @@ Returns true if PodSecurityPolicy is supported
 {{/*
 Returns true if AdmissionConfiguration is supported
 */}}
-{{- define "common.capabilities.admissionConfiguration.supported" -}}
-{{- $kubeVersion := include "common.capabilities.kubeVersion" . -}}
+{{- define "common-v2.capabilities.admissionConfiguration.supported" -}}
+{{- $kubeVersion := include "common-v2.capabilities.kubeVersion" . -}}
   {{- true -}}
 {{- end -}}
 
 {{/*
 Return the appropriate apiVersion for AdmissionConfiguration.
 */}}
-{{- define "common.capabilities.admissionConfiguration.apiVersion" -}}
-{{- $kubeVersion := include "common.capabilities.kubeVersion" . -}}
+{{- define "common-v2.capabilities.admissionConfiguration.apiVersion" -}}
+{{- $kubeVersion := include "common-v2.capabilities.kubeVersion" . -}}
 {{- if and (not (empty $kubeVersion)) (semverCompare "<1.25-0" $kubeVersion) -}}
 {{- print "apiserver.config.k8s.io/v1beta1" -}}
 {{- else -}}
@@ -156,8 +156,8 @@ Return the appropriate apiVersion for AdmissionConfiguration.
 {{/*
 Return the appropriate apiVersion for PodSecurityConfiguration.
 */}}
-{{- define "common.capabilities.podSecurityConfiguration.apiVersion" -}}
-{{- $kubeVersion := include "common.capabilities.kubeVersion" . -}}
+{{- define "common-v2.capabilities.podSecurityConfiguration.apiVersion" -}}
+{{- $kubeVersion := include "common-v2.capabilities.kubeVersion" . -}}
 {{- if and (not (empty $kubeVersion)) (semverCompare "<1.25-0" $kubeVersion) -}}
 {{- print "pod-security.admission.config.k8s.io/v1beta1" -}}
 {{- else -}}
@@ -171,7 +171,7 @@ A way to check the used Helm version was not introduced until version 3.3.0 with
 This check is introduced as a regexMatch instead of {{ if .Capabilities.HelmVersion }} because checking for the key HelmVersion in <3.3 results in a "interface not found" error.
 **To be removed when the catalog's minimun Helm version is 3.3**
 */}}
-{{- define "common.capabilities.supportsHelmVersion" -}}
+{{- define "common-v2.capabilities.supportsHelmVersion" -}}
 {{- if regexMatch "{(v[0-9])*[^}]*}}$" (.Capabilities | toString ) }}
   {{- true -}}
 {{- end -}}

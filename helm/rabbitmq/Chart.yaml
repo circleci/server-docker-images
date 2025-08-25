@@ -13,7 +13,7 @@ annotations:
 apiVersion: v2
 appVersion: 3.12.13
 dependencies:
-- name: common
+- name: common-v2
   repository: "file://../common/v2"
   tags:
   - bitnami-common
@@ -33,4 +33,4 @@ maintainers:
 name: rabbitmq
 sources:
 - https://github.com/bitnami/charts/tree/main/bitnami/rabbitmq
-version: 13.0.4
+version: 13.0.5
