@@ -26,6 +26,63 @@ kubeconform() {
     done
 }
 
+# This variable is used, but shellcheck can't tell.
+# shellcheck disable=SC2034
+help_package_chart="Package a Helm chart"
+package-chart() {
+    check-helm
+
+    chart_dir="${1:-.}"
+    arg="${2:-}"
+    if [ -n "${arg}" ]; then
+        shift 2
+    else
+        shift
+    fi
+
+    echo 'Updating dependencies'
+    helm dependency update "${chart_dir}"
+
+    mkdir -p target
+
+    echo "Packaging Helm chart"
+    case ${arg} in
+    "sign")
+        echo 'Signing Helm chart'
+        # shellcheck disable=SC2086
+        helm package --sign --key "${KEY:-<eng-on-prem@circleci.com>}" --keyring ${KEYRING:-~/.gnupg/secring.gpg} \
+          --destination ./target "${chart_dir}" "$@"
+        echo 'Verifying Helm chart signature'
+        helm verify ./target/"$(basename "${chart_dir}")"*.tgz
+        ;;
+    *)
+        helm package --destination ./target "${chart_dir}"
+        ;;
+    esac
+}
+
+# This variable is used, but shellcheck can't tell.
+# shellcheck disable=SC2034
+help_package_all_charts="Package all Helm charts"
+package-all-charts() {
+    charts_dir="${1:-./helm}"
+
+    if [ ! -d "${charts_dir}" ]; then
+        echo "Charts directory '${charts_dir}' not found"
+        return 1
+    fi
+
+    stdin_data=$([ -t 0 ] || cat)
+
+    for chart_path in "${charts_dir}"/*; do
+        if [ -d "${chart_path}" ]; then
+            echo "Processing chart: $(basename "${chart_path}")"
+            echo "${stdin_data}" | ./do package-chart "${chart_path}" "${@:2}"
+            echo
+        fi
+    done
+}
+
 check-helm() {
     if ! [ -x "$(command -v helm)" ]; then
         echo 'Helm is required. See: https://helm.sh/docs/intro/install/'

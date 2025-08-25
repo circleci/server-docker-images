@@ -31,14 +31,7 @@ commands:
       - checkout
 
 jobs:
-  validate-charts:
-    executor: deploy
-    steps:
-      - checkout
-      - run:
-          command: ./do kubeconform
-          when: always
-      - notify_failing_main
+  # Images
   scan_postgresql:
     executor: ccc
     steps:
@@ -115,10 +108,70 @@ jobs:
             MAJOR_VERSION: 6.2
           pwd: redis/6.2/debian-10
 
+  # Charts
+  validate-charts:
+    executor: deploy
+    steps:
+      - checkout
+      - run:
+          command: ./do kubeconform
+          when: always
+      - notify_failing_main
+  package-charts:
+    executor: deploy
+    steps:
+      - checkout
+      - run:
+          name: Install signing keys
+          command: |
+            exec 2>/dev/null
+
+            echo "Importing signing keys"
+            echo -n "${SIGNING_KEY_ENCODED}" | base64 --decode >signing_key_decoded.key
+            gpg --batch --yes --passphrase "${SIGNING_KEY_PASSPHRASE}" --import signing_key_decoded.key
+            rm signing_key_decoded.key
+            curl https://keys.openpgp.org/vks/v1/by-fingerprint/"${GPG_ID}" >pub-key.asc
+            gpg --import pub-key.asc
+            rm pub-key.asc
+
+            echo "Convert to legacy gpg format per Helm requirements"
+            gpg --export >~/.gnupg/pubring.gpg
+            gpg --batch --yes --pinentry-mode=loopback --passphrase "${SIGNING_KEY_PASSPHRASE}" --export-secret-keys "${GPG_ID}" >~/.gnupg/secring.gpg
+      - run:
+          name: Package and sign chart
+          command: |
+            echo "${SIGNING_KEY_PASSPHRASE}" | ./do package-all-charts ./helm sign --passphrase-file -
+      - persist_to_workspace:
+          root: .
+          paths: [./target]
+      - notify_failing_main
+  publish-chart:
+    executor: deploy
+    parameters:
+      repo:
+        type: string
+      chart_name:
+        type: string
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install package_cloud
+          command: |
+            sudo apt-get update && sudo apt-get install ruby-rubygems -y
+            sudo gem install --no-document package_cloud
+      - run:
+          name: Publish Helm chart
+          command: |
+            package_cloud push circleci/<< parameters.repo >>/helm/v1 \
+              ./target/<< parameters.chart_name >>*.tgz
+      - notify_failing_main
+
 workflows:
   my-workflow:
     jobs:
-      - validate-charts
+      # Image jobs
       - scan_rabbitmq:
           context: "org-global"
           filters:
@@ -175,3 +228,61 @@ workflows:
               only:
                 - main
                 - /^server-\d\..+/
+
+      # Chart jobs
+      - validate-charts
+      - package-charts:
+          context: releng-signing
+          requires: [validate-charts]
+      # Mongo chart
+      - approve-publish-mongo-chart:
+          type: approval
+          filters:
+            branches:
+              only: [main, /^server-\d\..+/]
+          requires: [package-charts]
+      - publish-chart:
+          name: publish-mongo-chart
+          repo: server-mongo
+          chart_name: mongodb
+          requires: [approve-publish-mongo-chart]
+          context: runner-package-deploy
+      # Postgres chart
+      - approve-publish-postgres-chart:
+          type: approval
+          filters:
+            branches:
+              only: [main, /^server-\d\..+/]
+          requires: [package-charts, scan_postgresql]
+      - publish-chart:
+          name: publish-postgres-chart
+          repo: server-postgres
+          chart_name: postgresql
+          requires: [approve-publish-postgres-chart]
+          context: runner-package-deploy
+      # RabbitMQ chart
+      - approve-publish-rabbitmq-chart:
+          type: approval
+          filters:
+            branches:
+              only: [main, /^server-\d\..+/]
+          requires: [package-charts, scan_rabbitmq]
+      - publish-chart:
+          name: publish-rabbitmq-chart
+          repo: server-rabbitmq
+          chart_name: rabbitmq
+          requires: [approve-publish-rabbitmq-chart]
+          context: runner-package-deploy
+      # Redis chart
+      - approve-publish-redis-chart:
+          type: approval
+          filters:
+            branches:
+              only: [main, /^server-\d\..+/]
+          requires: [package-charts, scan_redis]
+      - publish-chart:
+          name: publish-redis-chart
+          repo: server-redis
+          chart_name: redis
+          requires: [approve-publish-redis-chart]
+          context: runner-package-deploy
