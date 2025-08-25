@@ -9,21 +9,21 @@ SPDX-License-Identifier: APACHE-2.0
 Return the proper RabbitMQ image name
 */}}
 {{- define "rabbitmq.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+{{ include "common-v2.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper image name (for the init container volume-permissions image)
 */}}
 {{- define "rabbitmq.volumePermissions.image" -}}
-{{ include "common.images.image" (dict "imageRoot" .Values.volumePermissions.image "global" .Values.global) }}
+{{ include "common-v2.images.image" (dict "imageRoot" .Values.volumePermissions.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "rabbitmq.imagePullSecrets" -}}
-{{ include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.volumePermissions.image) "context" $) }}
+{{ include "common-v2.images.renderPullSecrets" (dict "images" (list .Values.image .Values.volumePermissions.image) "context" $) }}
 {{- end -}}
 
 {{/*
@@ -31,7 +31,7 @@ Return the proper Docker Image Registry Secret Names
  */}}
 {{- define "rabbitmq.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "common.names.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "common-v2.names.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
@@ -44,7 +44,7 @@ Get RabbitMQ password secret name.
     {{- if .Values.auth.existingPasswordSecret -}}
         {{- printf "%s" (tpl .Values.auth.existingPasswordSecret $) -}}
     {{- else -}}
-        {{- printf "%s" (include "common.names.fullname" .) -}}
+        {{- printf "%s" (include "common-v2.names.fullname" .) -}}
     {{- end -}}
 {{- end -}}
 
@@ -66,7 +66,7 @@ Return RabbitMQ password
     {{- if not (empty .Values.auth.password) -}}
         {{- .Values.auth.password -}}
     {{- else -}}
-        {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "rabbitmq.secretPasswordName" .) "Length" 16 "Key" (include "rabbitmq.secretPasswordKey" .))  -}}
+        {{- include "getValueFromSecret" (dict "Namespace" (include "common-v2.names.namespace" .) "Name" (include "rabbitmq.secretPasswordName" .) "Length" 16 "Key" (include "rabbitmq.secretPasswordKey" .))  -}}
     {{- end -}}
 {{- end }}
 
@@ -77,7 +77,7 @@ Get the erlang secret.
     {{- if .Values.auth.existingErlangSecret -}}
         {{- printf "%s" (tpl .Values.auth.existingErlangSecret $) -}}
     {{- else -}}
-        {{- printf "%s" (include "common.names.fullname" .) -}}
+        {{- printf "%s" (include "common-v2.names.fullname" .) -}}
     {{- end -}}
 {{- end -}}
 
@@ -99,7 +99,7 @@ Return RabbitMQ erlang cookie secret
     {{- if not (empty .Values.auth.erlangCookie) -}}
         {{- .Values.auth.erlangCookie -}}
     {{- else -}}
-        {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "rabbitmq.secretErlangName" .) "Length" 32 "Key" (include "rabbitmq.secretErlangKey" .))  -}}
+        {{- include "getValueFromSecret" (dict "Namespace" (include "common-v2.names.namespace" .) "Name" (include "rabbitmq.secretErlangName" .) "Length" 32 "Key" (include "rabbitmq.secretErlangKey" .))  -}}
     {{- end -}}
 {{- end }}
 
@@ -110,7 +110,7 @@ Get the TLS secret.
     {{- if .Values.auth.tls.existingSecret -}}
         {{- printf "%s" (tpl .Values.auth.tls.existingSecret $) -}}
     {{- else -}}
-        {{- printf "%s-certs" (include "common.names.fullname" .) -}}
+        {{- printf "%s-certs" (include "common-v2.names.fullname" .) -}}
     {{- end -}}
 {{- end -}}
 
@@ -248,7 +248,7 @@ rabbitmq: memoryHighWatermark
 Validate values of rabbitmq - TLS configuration for Ingress
 */}}
 {{- define "rabbitmq.validateValues.ingress.tls" -}}
-{{- if and .Values.ingress.enabled .Values.ingress.tls (not (include "common.ingress.certManagerRequest" ( dict "annotations" .Values.ingress.annotations ))) (not .Values.ingress.selfSigned) (not .Values.ingress.existingSecret) (empty .Values.ingress.extraTls) }}
+{{- if and .Values.ingress.enabled .Values.ingress.tls (not (include "common-v2.ingress.certManagerRequest" ( dict "annotations" .Values.ingress.annotations ))) (not .Values.ingress.selfSigned) (not .Values.ingress.existingSecret) (empty .Values.ingress.extraTls) }}
 rabbitmq: ingress.tls
     You enabled the TLS configuration for the default ingress hostname but
     you did not enable any of the available mechanisms to create the TLS secret
@@ -279,7 +279,7 @@ rabbitmq: auth.tls
 Get the initialization scripts volume name.
 */}}
 {{- define "rabbitmq.initScripts" -}}
-{{- printf "%s-init-scripts" (include "common.names.fullname" .) -}}
+{{- printf "%s-init-scripts" (include "common-v2.names.fullname" .) -}}
 {{- end -}}
 
 {{/*

@@ -4,7 +4,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "mongodb.fullname" . }}-arbiter
   namespace: {{ include "mongodb.namespace" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  labels: {{- include "common-v1.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: arbiter
 spec:
   {{- if .Values.arbiter.pdb.minAvailable }}
@@ -14,6 +14,6 @@ spec:
   maxUnavailable: {{ .Values.arbiter.pdb.maxUnavailable }}
   {{- end }}
   selector:
-    matchLabels: {{ include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{ include "common-v1.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: arbiter
 {{- end }}
