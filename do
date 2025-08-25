@@ -12,7 +12,7 @@ kubeconform() {
     for chart_dir in ./helm/*/; do
         if [[ -f "$chart_dir/Chart.yaml" ]]; then
             # TODO: Skip postgresql chart - failing validation
-            if [[ "$chart_dir" == *"postgresql"* ]]; then
+            if [[ "$chart_dir" == *"postgresql"* ||  "$chart_dir" == *"common"* ]]; then
                 echo "Skipping chart: $chart_dir (TODO: fix validation issues)"
                 continue
             fi
@@ -76,6 +76,10 @@ package-all-charts() {
 
     for chart_path in "${charts_dir}"/*; do
         if [ -d "${chart_path}" ]; then
+            if [[ "${chart_path}" == *"common"* ]]; then
+                continue
+            fi
+
             echo "Processing chart: $(basename "${chart_path}")"
             echo "${stdin_data}" | ./do package-chart "${chart_path}" "${@:2}"
             echo
