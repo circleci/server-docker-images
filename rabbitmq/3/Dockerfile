@@ -50,7 +50,7 @@ COPY prebuildfs /
 SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 
 # Install runtime dependencies only
-RUN install_packages libgcc-s1 libssl3 libstdc++6 libtinfo6 locales procps zlib1g
+RUN install_packages ca-certificates curl libgcc-s1 libssl3 libstdc++6 libtinfo6 locales procps zlib1g
 
 COPY --from=builder /opt/bitnami/erlang /opt/bitnami/erlang
 COPY --from=builder /opt/bitnami/rabbitmq /opt/bitnami/rabbitmq
