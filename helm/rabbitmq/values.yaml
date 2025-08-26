@@ -13,12 +13,12 @@
 ## @param global.storageClass Global StorageClass for Persistent Volume(s)
 ##
 global:
-  imageRegistry: "cciserver.azurecr.io"
+  imageRegistry: ""
   ## E.g.
   ## imagePullSecrets:
   ##   - myRegistryKeySecretName
   ##
-  imagePullSecrets: [regcred]
+  imagePullSecrets: []
   storageClass: ""
   ## Compatibility adaptations for Kubernetes platforms
   ##
@@ -41,6 +41,7 @@ global:
 ## @param image.debug Set to true if you would like to see extra information on logs
 ##
 image:
+  registry: "cciserver.azurecr.io"
   repository: server-rabbitmq
   tag: 3.12.423-3363c50
   digest: ""
@@ -60,7 +61,7 @@ image:
   ## pullSecrets:
   ##   - myRegistryKeySecretName
   ##
-  pullSecrets: []
+  pullSecrets: [regcred]
 ## @section Common parameters
 ##
 
