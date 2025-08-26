@@ -22,7 +22,7 @@ Params:
 
   {{- $authEnabled := include "common-v1.utils.getValueFromKey" (dict "key" $valueKeyAuthEnabled "context" .context) -}}
 
-  {{- if and (or (not $existingSecret) (eq $existingSecret "\"\"")) (eq $enabled "true") (eq $authEnabled "true") -}}
+  {{- if and (not $existingSecret) (eq $enabled "true") (eq $authEnabled "true") -}}
     {{- $requiredPasswords := list -}}
 
     {{- $requiredRootPassword := dict "valueKey" $valueKeyRootPassword "secret" .secret "field" "mongodb-root-password" -}}
