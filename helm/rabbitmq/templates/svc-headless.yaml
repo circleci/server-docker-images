@@ -6,12 +6,12 @@ SPDX-License-Identifier: APACHE-2.0
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ printf "%s-%s" (include "common.names.fullname" .) (default "headless" .Values.servicenameOverride) }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  name: {{ printf "%s-%s" (include "common-v2.names.fullname" .) (default "headless" .Values.servicenameOverride) }}
+  namespace: {{ include "common-v2.names.namespace" . | quote }}
+  labels: {{- include "common-v2.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- if or .Values.service.annotationsHeadless .Values.commonAnnotations .Values.service.headless.annotations }}
-  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.service.headless.annotations .Values.service.annotationsHeadless .Values.commonAnnotations ) "context" . ) }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- $annotations := include "common-v2.tplvalues.merge" ( dict "values" ( list .Values.service.headless.annotations .Values.service.annotationsHeadless .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common-v2.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   clusterIP: None
@@ -37,6 +37,6 @@ spec:
       port: {{ .Values.service.ports.manager  }}
       targetPort: stats
     {{- end }}
-  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
-  selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+  {{- $podLabels := include "common-v2.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
+  selector: {{- include "common-v2.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
   publishNotReadyAddresses: true
