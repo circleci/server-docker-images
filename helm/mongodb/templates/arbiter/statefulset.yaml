@@ -1,28 +1,28 @@
 {{- if (include "mongodb.arbiter.enabled" .) }}
-apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+apiVersion: {{ include "common-v1.capabilities.statefulset.apiVersion" . }}
 kind: StatefulSet
 metadata:
   name: {{ include "mongodb.fullname" . }}-arbiter
   namespace: {{ include "mongodb.namespace" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  labels: {{- include "common-v1.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: arbiter
     {{- if .Values.arbiter.labels }}
-    {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.labels "context" $) | nindent 4 }}
+    {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.labels "context" $) | nindent 4 }}
     {{- end }}
     {{- if .Values.arbiter.annotations }}
-  annotations: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.annotations "context" $) | nindent 4 }}
+  annotations: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   serviceName: {{ include "mongodb.fullname" . }}-arbiter-headless
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "common-v1.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: arbiter
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "common-v1.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: arbiter
         {{- if .Values.arbiter.podLabels }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.podLabels "context" $) | nindent 8 }}
+        {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.podLabels "context" $) | nindent 8 }}
         {{- end }}
       {{- if or (include "mongodb.arbiter.createConfigmap" .) .Values.arbiter.podAnnotations }}
       annotations:
@@ -30,7 +30,7 @@ spec:
         checksum/configuration: {{ include (print $.Template.BasePath "/arbiter/configmap.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.arbiter.podAnnotations }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.podAnnotations "context" $) | nindent 8 }}
+        {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.podAnnotations "context" $) | nindent 8 }}
         {{- end }}
       {{- end }}
     spec:
@@ -40,18 +40,18 @@ spec:
       {{- end }}
       serviceAccountName: {{ template "mongodb.serviceAccountName" . }}
       {{- if .Values.arbiter.affinity }}
-      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.affinity "context" $) | nindent 8 }}
+      affinity: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.affinity "context" $) | nindent 8 }}
       {{- else }}
       affinity:
-        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.arbiter.podAffinityPreset "component" "arbiter" "context" $) | nindent 10 }}
-        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.arbiter.podAntiAffinityPreset "component" "arbiter" "context" $) | nindent 10 }}
-        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.arbiter.nodeAffinityPreset.type "key" .Values.arbiter.nodeAffinityPreset.key "values" .Values.arbiter.nodeAffinityPreset.values) | nindent 10 }}
+        podAffinity: {{- include "common-v1.affinities.pods" (dict "type" .Values.arbiter.podAffinityPreset "component" "arbiter" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common-v1.affinities.pods" (dict "type" .Values.arbiter.podAntiAffinityPreset "component" "arbiter" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common-v1.affinities.nodes" (dict "type" .Values.arbiter.nodeAffinityPreset.type "key" .Values.arbiter.nodeAffinityPreset.key "values" .Values.arbiter.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       {{- if .Values.arbiter.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.arbiter.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.tolerations "context" $) | nindent 8 }}
+      tolerations: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.tolerations "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.arbiter.priorityClassName }}
       priorityClassName: {{ .Values.arbiter.priorityClassName }}
@@ -61,7 +61,7 @@ spec:
       {{- end }}
       initContainers:
         {{- if .Values.arbiter.initContainers }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.initContainers "context" $) | nindent 8 }}
+        {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.initContainers "context" $) | nindent 8 }}
         {{- end }}
         {{- if and .Values.tls.enabled .Values.arbiter.enabled }}
         - name: generate-client
@@ -125,10 +125,10 @@ spec:
           securityContext: {{- omit .Values.arbiter.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           {{- if .Values.arbiter.command }}
-          command: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.command "context" $) | nindent 12 }}
+          command: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.command "context" $) | nindent 12 }}
           {{- end }}
           {{- if .Values.arbiter.args }}
-          args: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.args "context" $) | nindent 12 }}
+          args: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.args "context" $) | nindent 12 }}
           {{- end }}
           env:
             - name: BITNAMI_DEBUG
@@ -178,7 +178,7 @@ spec:
               value: --tls --tlsCertificateKeyFile=/certs/mongodb.pem --tlsCAFile=/certs/mongodb-ca-cert
             {{- end }}
             {{- if .Values.arbiter.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.extraEnvVars "context" $) | nindent 12 }}
+            {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           {{- if or .Values.arbiter.extraEnvVarsCM .Values.arbiter.extraEnvVarsSecret }}
           envFrom:
@@ -204,7 +204,7 @@ spec:
             successThreshold: {{ .Values.arbiter.livenessProbe.successThreshold }}
             failureThreshold: {{ .Values.arbiter.livenessProbe.failureThreshold }}
           {{- else if .Values.arbiter.customLivenessProbe }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.customLivenessProbe "context" $) | nindent 12 }}
+          livenessProbe: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.customLivenessProbe "context" $) | nindent 12 }}
           {{- end }}
           {{- if .Values.arbiter.readinessProbe.enabled }}
           readinessProbe:
@@ -216,7 +216,7 @@ spec:
             successThreshold: {{ .Values.arbiter.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.arbiter.readinessProbe.failureThreshold }}
           {{- else if .Values.arbiter.customReadinessProbe }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.customReadinessProbe "context" $) | nindent 12 }}
+          readinessProbe: {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.customReadinessProbe "context" $) | nindent 12 }}
           {{- end }}
           {{- if .Values.arbiter.resources }}
           resources: {{- toYaml .Values.arbiter.resources | nindent 12 }}
@@ -237,7 +237,7 @@ spec:
             {{- end }}
           {{- end }}
         {{- if .Values.arbiter.sidecars }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.sidecars "context" $) | nindent 8 }}
+        {{- include "common-v1.tplvalues.render" (dict "value" .Values.arbiter.sidecars "context" $) | nindent 8 }}
         {{- end }}
       {{- if or .Values.arbiter.configuration .Values.arbiter.existingConfigmap .Values.arbiter.extraVolumes .Values.tls.enabled }}
       volumes:

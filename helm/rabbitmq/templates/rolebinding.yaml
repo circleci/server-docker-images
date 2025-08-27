@@ -5,13 +5,13 @@ SPDX-License-Identifier: APACHE-2.0
 
 {{- if .Values.rbac.create }}
 kind: RoleBinding
-apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
+apiVersion: {{ include "common-v2.capabilities.rbac.apiVersion" . }}
 metadata:
-  name: {{ printf "%s-endpoint-reader" (include "common.names.fullname" .) }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  name: {{ printf "%s-endpoint-reader" (include "common-v2.names.fullname" .) }}
+  namespace: {{ include "common-v2.names.namespace" . | quote }}
+  labels: {{- include "common-v2.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
   {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  annotations: {{- include "common-v2.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 subjects:
   - kind: ServiceAccount
@@ -19,5 +19,5 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ printf "%s-endpoint-reader" (include "common.names.fullname" .) }}
+  name: {{ printf "%s-endpoint-reader" (include "common-v2.names.fullname" .) }}
 {{- end }}
