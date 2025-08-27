@@ -6,13 +6,13 @@ SPDX-License-Identifier: APACHE-2.0
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.service.labels .Values.commonLabels ) "context" . ) }}
-  labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
+  name: {{ include "common-v2.names.fullname" . }}
+  namespace: {{ include "common-v2.names.namespace" . | quote }}
+  {{- $labels := include "common-v2.tplvalues.merge" ( dict "values" ( list .Values.service.labels .Values.commonLabels ) "context" . ) }}
+  labels: {{- include "common-v2.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
   {{- if or .Values.service.annotations .Values.commonAnnotations }}
-  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.service.annotations .Values.commonAnnotations ) "context" . ) }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
+  {{- $annotations := include "common-v2.tplvalues.merge" ( dict "values" ( list .Values.service.annotations .Values.commonAnnotations ) "context" . ) }}
+  annotations: {{- include "common-v2.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
@@ -38,7 +38,7 @@ spec:
   sessionAffinity: {{ .Values.service.sessionAffinity }}
   {{- end }}
   {{- if .Values.service.sessionAffinityConfig }}
-  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.service.sessionAffinityConfig "context" $) | nindent 4 }}
+  sessionAffinityConfig: {{- include "common-v2.tplvalues.render" (dict "value" .Values.service.sessionAffinityConfig "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.service.externalIPs }}
   externalIPs: {{- toYaml .Values.service.externalIPs | nindent 4 }}
@@ -105,7 +105,7 @@ spec:
       {{- end }}
     {{- end }}
     {{- if .Values.service.extraPorts }}
-    {{- include "common.tplvalues.render" (dict "value" .Values.service.extraPorts "context" $) | nindent 4 }}
+    {{- include "common-v2.tplvalues.render" (dict "value" .Values.service.extraPorts "context" $) | nindent 4 }}
     {{- end }}
-  {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
-  selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+  {{- $podLabels := include "common-v2.tplvalues.merge" ( dict "values" ( list .Values.podLabels .Values.commonLabels ) "context" . ) }}
+  selector: {{- include "common-v2.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
