@@ -4,8 +4,8 @@ kind: ConfigMap
 metadata:
   name: {{ include "mongodb.fullname" . }}-init-scripts
   namespace: {{ include "mongodb.namespace" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  labels: {{- include "common-v1.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: mongodb
 data:
-{{- include "common.tplvalues.render" (dict "value" .Values.initdbScripts "context" .) | nindent 2 }}
+{{- include "common-v1.tplvalues.render" (dict "value" .Values.initdbScripts "context" .) | nindent 2 }}
 {{- end }}

@@ -7,8 +7,8 @@ annotations:
 apiVersion: v2
 appVersion: 6.0.10
 dependencies:
-- name: common
-  repository: https://charts.bitnami.com/bitnami
+- name: common-v1
+  repository: "file://../common/v1"
   tags:
   - bitnami-common
   version: 1.x.x
@@ -32,4 +32,4 @@ name: redis
 sources:
 - https://github.com/bitnami/bitnami-docker-redis
 - http://redis.io/
-version: 12.6.0
+version: 12.6.2
