@@ -54,7 +54,7 @@ sentinel:
   ## ref: https://hub.docker.com/r/bitnami/redis-sentinel/tags/
   ##
   image:
-    registry: docker.io
+    registry: cciserver.azurecr.io
     repository: bitnami/redis-sentinel
     ## Bitnami Redis(TM) image tag
     ## ref: https://github.com/bitnami/bitnami-docker-redis-sentinel#supported-tags-and-respective-dockerfile-links
@@ -678,7 +678,7 @@ metrics:
   enabled: false
 
   image:
-    registry: docker.io
+    registry: cciserver.azurecr.io
     repository: bitnami/redis-exporter
     tag: 1.15.1-debian-10-r2
     pullPolicy: IfNotPresent
@@ -802,7 +802,7 @@ metrics:
 volumePermissions:
   enabled: false
   image:
-    registry: docker.io
+    registry: cciserver.azurecr.io
     repository: bitnami/minideb
     tag: buster
     pullPolicy: Always
@@ -844,7 +844,7 @@ configmap: |-
 sysctlImage:
   enabled: false
   command: []
-  registry: docker.io
+  registry: cciserver.azurecr.io
   repository: bitnami/minideb
   tag: buster
   pullPolicy: Always

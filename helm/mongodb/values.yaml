@@ -102,7 +102,7 @@ tls:
   ## Bitnami Nginx image
   ##
   image:
-    registry: docker.io
+    registry: cciserver.azurecr.io
     repository: bitnami/nginx
     tag: 1.19.6-debian-10-r26
     pullPolicy: IfNotPresent
@@ -514,7 +514,7 @@ externalAccess:
     ## Bitnami Kubectl image
     ##
     image:
-      registry: docker.io
+      registry: cciserver.azurecr.io
       repository: bitnami/kubectl
       tag: 1.18.14-debian-10-r20
       ## Specify a imagePullPolicy
@@ -847,7 +847,7 @@ volumePermissions:
   ## ref: https://hub.docker.com/r/bitnami/minideb/tags/
   ##
   image:
-    registry: docker.io
+    registry: cciserver.azurecr.io
     repository: bitnami/minideb
     tag: buster
     ## Specify a imagePullPolicy
@@ -896,7 +896,7 @@ metrics:
   ## ref: https://hub.docker.com/r/bitnami/mongodb-exporter/tags/
   ##
   image:
-    registry: docker.io
+    registry: cciserver.azurecr.io
     repository: bitnami/mongodb-exporter
     tag: 0.20.1-debian-10-r38
     pullPolicy: IfNotPresent
