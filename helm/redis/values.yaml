@@ -28,7 +28,8 @@ image:
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ##
-  pullSecrets: [regcred]
+  # pullSecrets:
+  #   - myRegistryKeySecretName
 
 ## String to partially override redis.fullname template (will maintain the release name)
 ##
