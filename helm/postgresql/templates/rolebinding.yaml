@@ -1,0 +1,22 @@
+{{- if .Values.rbac.create }}
+kind: RoleBinding
+apiVersion: {{ include "common-v1.capabilities.rbac.apiVersion" . }}
+metadata:
+  name: {{ include "common-v1.names.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common-v1.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common-v1.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common-v1.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+roleRef:
+  kind: Role
+  name: {{ include "common-v1.names.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "postgresql.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace | quote }}
+{{- end }}
