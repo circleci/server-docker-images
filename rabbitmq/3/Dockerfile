@@ -71,8 +71,7 @@ RUN /opt/bitnami/scripts/locales/add-extra-locales.sh
 ENV APP_VERSION="${RABBITMQ_VERSION}" \
     BITNAMI_APP_NAME="rabbitmq" \
     LANG="en_US.UTF-8" \
-    LANGUAGE="en_US:en" \
-    RABBITMQ_ERLANG_COOKIE="RABBITMQCOOKIE"
+    LANGUAGE="en_US:en"
 
 EXPOSE 4369 5551 5552 5671 5672 15671 15672 25672
 
