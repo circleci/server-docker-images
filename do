@@ -85,6 +85,40 @@ package-all-charts() {
     done
 }
 
+# This variable is used, but shellcheck can't tell.
+# shellcheck disable=SC2034
+help_check_version_bump="Check if charts changed and version is bumped accordingly"
+check-version-bump() {
+  for chart_yaml in ./helm/*/Chart.yaml; do
+    if [[ -f "${chart_yaml}" ]]; then
+      chart_dir=$(dirname "${chart_yaml}" | sed 's|^\./||')
+
+      if git diff --name-only HEAD~1 HEAD | grep -q "^${chart_dir}/"; then
+        version=$(grep '^version:' "${chart_yaml}" | awk '{print $2}' | tr -d '"')
+        name=$(grep '^name:' "${chart_yaml}" | awk '{print $2}' | tr -d '"')
+
+        case "${name}" in
+          mongodb) repo="server-mongo" ;;
+          postgresql) repo="server-postgres" ;;
+          rabbitmq) repo="server-rabbitmq" ;;
+          redis) repo="server-redis" ;;
+          *) echo "Unknown chart: ${name}"; exit 1 ;;
+        esac
+
+        echo "Chart ${name} changed, checking version ${version} in Packagecloud"
+
+        if curl -sf "https://${PACKAGECLOUD_TOKEN}:@packagecloud.io/api/v1/repos/circleci/${repo}/search.json?q=${version}" | grep -q "\"filename\":\"${name}-${version}.tgz\""; then
+          echo "Error: ${name}-${version} already exists. Please bump version in ${chart_yaml}"
+          exit 1
+        elif [[ "${CIRCLE_BRANCH:-}" =~ ^server-[0-9]+\.[0-9]+$ && ! "${version}" =~ -${CIRCLE_BRANCH}$ ]]; then
+          echo "Error: Version ${version} should be suffixed with -${CIRCLE_BRANCH} for branch ${CIRCLE_BRANCH}"
+          exit 1
+        fi
+      fi
+    fi
+  done
+}
+
 check-helm() {
     if ! [ -x "$(command -v helm)" ]; then
         echo 'Helm is required. See: https://helm.sh/docs/intro/install/'
