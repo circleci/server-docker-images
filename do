@@ -11,9 +11,7 @@ kubeconform() {
 
     for chart_dir in ./helm/*/; do
         if [[ -f "$chart_dir/Chart.yaml" ]]; then
-            # TODO: Skip postgresql chart - failing validation
-            if [[ "$chart_dir" == *"postgresql"* ||  "$chart_dir" == *"common"* ]]; then
-                echo "Skipping chart: $chart_dir (TODO: fix validation issues)"
+            if [[ "$chart_dir" == *"common"* ]]; then
                 continue
             fi
 
