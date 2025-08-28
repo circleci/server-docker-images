@@ -17,11 +17,11 @@ executors:
           password: $DOCKER_HUB_PASSWORD
 
 commands:
-  notify_failing_main:
+  notify_failing_branch:
     steps:
       - slack/notify:
           channel: server-alerts
-          branch_pattern: main
+          branch_pattern: main, server-[0-9]\.[0-9]+
           event: fail
           template: basic_fail_1
   set_up_container:
@@ -29,6 +29,13 @@ commands:
     steps:
       - setup_remote_docker
       - checkout
+  install_packagecloud_cli:
+    steps:
+      - run:
+          name: Install package_cloud
+          command: |
+            sudo apt-get update && sudo apt-get install ruby-rubygems -y
+            sudo gem install --no-document package_cloud
 
 jobs:
   # Images
@@ -116,7 +123,7 @@ jobs:
       - run:
           command: ./do kubeconform
           when: always
-      - notify_failing_main
+      - notify_failing_branch
   package-charts:
     executor: deploy
     steps:
@@ -144,7 +151,14 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: [./target]
-      - notify_failing_main
+      - notify_failing_branch
+  check-version-bump:
+    executor: deploy
+    steps:
+      - checkout
+      - run:
+          name: Check if charts changed and version is bumped accordingly
+          command: ./do check-version-bump
   publish-chart:
     executor: deploy
     parameters:
@@ -156,17 +170,14 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run:
-          name: Install package_cloud
-          command: |
-            sudo apt-get update && sudo apt-get install ruby-rubygems -y
-            sudo gem install --no-document package_cloud
+      - install_packagecloud_cli
       - run:
           name: Publish Helm chart
           command: |
             package_cloud push circleci/<< parameters.repo >>/helm/v1 \
               ./target/<< parameters.chart_name >>*.tgz
-      - notify_failing_main
+      - notify_failing_branch
+
 
 workflows:
   my-workflow:
@@ -230,9 +241,10 @@ workflows:
 
       # Chart jobs
       - validate-charts
+      - check-version-bump
       - package-charts:
           context: releng-signing
-          requires: [validate-charts]
+          requires: [validate-charts, check-version-bump]
       # Mongo chart
       - approve-publish-mongo-chart:
           type: approval
