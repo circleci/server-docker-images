@@ -61,7 +61,7 @@ image:
   ## pullSecrets:
   ##   - myRegistryKeySecretName
   ##
-  pullSecrets: [regcred]
+  pullSecrets: []
 ## @section Common parameters
 ##
 
