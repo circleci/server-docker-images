@@ -10,7 +10,7 @@ ENV POSTGRESQL_BASE_DIR "/opt/bitnami/postgresql"
 ENV PATH="${POSTGRESQL_BASE_DIR}/bin:${PATH}"
 
 # Install PostgreSQL
-ENV POSTGRESQL_VERSION 12.22
+ENV POSTGRESQL_VERSION 13.21
 RUN install_packages clang dirmngr gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev postgresql-server-dev-all python3-dev tcl-dev uuid-dev
 RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/postgresql-${POSTGRESQL_VERSION}.tar.gz" | tar -xz && \
 	cd "postgresql-${POSTGRESQL_VERSION}" && \
@@ -42,7 +42,7 @@ RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/post
 	make clean
 
 # Install pgAudit
-ENV POSTGRESQL_PGAUDIT_VERSION 1.4.3
+ENV POSTGRESQL_PGAUDIT_VERSION 1.5.3
 RUN curl -sSL "https://github.com/pgaudit/pgaudit/archive/${POSTGRESQL_PGAUDIT_VERSION}.tar.gz" | tar -xz && \
     cd pgaudit-${POSTGRESQL_PGAUDIT_VERSION} && \
     make -j $(nproc) USE_PGXS=1 && \
@@ -116,7 +116,7 @@ RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
 COPY rootfs /
 RUN /opt/bitnami/scripts/postgresql/postunpack.sh
 RUN /opt/bitnami/scripts/locales/add-extra-locales.sh
-ENV APP_VERSION="12.22.0" \
+ENV APP_VERSION="13.21.0" \
     BITNAMI_APP_NAME="postgresql" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
