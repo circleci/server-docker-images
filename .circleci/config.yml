@@ -242,7 +242,8 @@ workflows:
 
       # Chart jobs
       - validate-charts
-      - check-version-bump
+      - check-version-bump:
+          context: runner-package-deploy
       - package-charts:
           context: releng-signing
           requires: [validate-charts, check-version-bump]
