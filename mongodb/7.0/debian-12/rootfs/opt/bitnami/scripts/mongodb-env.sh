@@ -1,6 +1,7 @@
 #!/bin/bash
-# Copyright Broadcom, Inc. All Rights Reserved.
+# Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
+# Modifications copyright (C) 2025 Circle Internet Services, Inc.
 #
 # Environment configuration for mongodb
 
