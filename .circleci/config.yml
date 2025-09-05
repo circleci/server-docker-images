@@ -49,8 +49,8 @@ jobs:
           environment:
             NAME: server-postgres
             DOCKERFILE_PATH: Dockerfile
-            MAJOR_VERSION: 12.22
-          pwd: postgresql/12
+            MAJOR_VERSION: 13.21
+          pwd: postgresql/13
   scan_rabbitmq:
     executor: ccc
     steps:
@@ -282,7 +282,8 @@ workflows:
 
       # Chart jobs
       - validate-charts
-      - check-version-bump
+      - check-version-bump:
+          context: runner-package-deploy
       - package-charts:
           context: releng-signing
           requires: [validate-charts, check-version-bump]
