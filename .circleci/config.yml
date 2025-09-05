@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  slack: circleci/slack@5.1.1
+  slack: circleci/slack@5.2.3
   scotty-orb: cci-releng/scotty-orb@0.0.12
 
 executors:
