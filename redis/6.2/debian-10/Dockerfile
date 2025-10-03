@@ -8,16 +8,16 @@ RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /
     sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
     sed -i '/stretch-updates/d' /etc/apt/sources.list
 RUN install_packages build-essential wget make gcc ca-certificates
-RUN wget -O redis.tar.gz https://github.com/redis/redis/archive/refs/tags/6.2.11.tar.gz \
+RUN wget -O redis.tar.gz https://github.com/redis/redis/archive/refs/tags/6.2.20.tar.gz \
     && tar -xzf redis.tar.gz \
-    && cd redis-6.2.11 \
+    && cd redis-6.2.20 \
     && make \
     && make install PREFIX=/opt/bitnami/redis \
     && mkdir -p /opt/bitnami/redis/etc \
     && cp redis.conf /opt/bitnami/redis/etc/redis-default.conf \
     && strip /opt/bitnami/redis/bin/* \
     && cd .. \
-    && rm -rf redis-6.2.11 redis.tar.gz
+    && rm -rf redis-6.2.20 redis.tar.gz
 
 # Build stage for wait-for-port
 FROM docker.io/bitnami/minideb:buster as wait-for-port-builder
