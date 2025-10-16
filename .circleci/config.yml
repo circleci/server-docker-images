@@ -265,15 +265,48 @@ workflows:
                 - main
                 - /^server-\d\..+/
       - scotty-orb/test-in-server-and-promote:
-          name: test-in-server-and-promote
+          name: test-in-server-and-promote-postgresql
+          context: ["org-global", github-readonly]
+          requires:
+            - publish_postgresql
+            - validate-charts
+          promotion_component_list: "circleci/server-postgres"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
+      - scotty-orb/test-in-server-and-promote:
+          name: test-in-server-and-promote-rabbitmq
           context: ["org-global", github-readonly]
           requires:
             - publish_rabbitmq
-            - publish_postgresql
+            - validate-charts
+          promotion_component_list: "circleci/server-rabbitmq"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
+      - scotty-orb/test-in-server-and-promote:
+          name: test-in-server-and-promote-redis
+          context: ["org-global", github-readonly]
+          requires:
             - publish_redis
+            - validate-charts
+          promotion_component_list: "circleci/server-redis"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
+      - scotty-orb/test-in-server-and-promote:
+          name: test-in-server-and-promote-mongodb
+          context: ["org-global", github-readonly]
+          requires:
             - publish_mongodb
             - validate-charts
-          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci/server-redis"
+          promotion_component_list: "circleci/server-mongodb"
           filters:
             branches:
               only:
