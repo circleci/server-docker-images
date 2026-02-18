@@ -7,7 +7,7 @@ orbs:
 executors:
   deploy:
     docker:
-      - image: cimg/deploy:2025.01
+      - image: cimg/deploy:2026.02
     resource_class: medium
   ccc:
     docker:
