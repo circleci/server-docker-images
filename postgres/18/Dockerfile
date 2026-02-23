@@ -11,7 +11,7 @@ ENV PATH="${POSTGRESQL_BASE_DIR}/bin:${PATH}"
 
 # Install PostgreSQL
 ENV POSTGRESQL_VERSION 18.2
-RUN install_packages clang dirmngr gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev postgresql-server-dev-all python3-dev tcl-dev uuid-dev
+RUN install_packages bison clang dirmngr flex gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev meson ninja-build postgresql-server-dev-all python3-dev tcl-dev uuid-dev
 RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/postgresql-${POSTGRESQL_VERSION}.tar.gz" | tar -xz && \
 	cd "postgresql-${POSTGRESQL_VERSION}" && \
 	./configure \
@@ -22,7 +22,6 @@ RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/post
 		--with-system-tzdata=/usr/share/zoneinfo \
 		--with-includes=/usr/local/include \
 		--with-libraries=/usr/local/lib \
-		--with-krb5 \
 		--with-gssapi \
 		--with-ldap \
 		--with-pam \
@@ -54,12 +53,12 @@ RUN curl -sSL "https://github.com/hapostgres/pg_auto_failover/archive/refs/heads
     make clean
 
 # Install pgBackRest
-ENV POSTGRESQL_PGBACKREST_VERSION 2.58
+ENV POSTGRESQL_PGBACKREST_VERSION 2.58.0
 RUN curl -sSL "https://github.com/pgbackrest/pgbackrest/archive/release/${POSTGRESQL_PGBACKREST_VERSION}.tar.gz" | tar -xz && \
-    cd pgbackrest-release-${POSTGRESQL_PGBACKREST_VERSION}/src && \
-    ./configure --prefix="${POSTGRESQL_BASE_DIR}" && \
-    make -j $(nproc) && \
-    make -j $(nproc) install
+    cd pgbackrest-release-${POSTGRESQL_PGBACKREST_VERSION} && \
+    meson setup build --prefix="${POSTGRESQL_BASE_DIR}" && \
+    ninja -C build && \
+    ninja -C build install
 
 ENV NSS_WRAPPER_VERSION 1.1.15
 RUN install_packages cmake
