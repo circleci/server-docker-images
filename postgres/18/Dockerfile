@@ -1,6 +1,6 @@
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
-# Modifications copyright (C) 2023 Circle Internet Services, Inc.
+# Modifications copyright (C) 2026 Circle Internet Services, Inc.
 
 FROM buildpack-deps:bullseye as build
 

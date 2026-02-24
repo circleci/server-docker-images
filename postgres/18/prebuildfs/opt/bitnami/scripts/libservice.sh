@@ -1,7 +1,7 @@
 #!/bin/bash
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
-# Modifications copyright (C) 2023 Circle Internet Services, Inc.
+# Modifications copyright (C) 2026 Circle Internet Services, Inc.
 #
 # Library for managing services
 
@@ -135,7 +135,7 @@ generate_cron_conf() {
         cat > "/etc/cron.d/${service_name}" <<EOF
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
-# Modifications copyright (C) 2023 Circle Internet Services, Inc.
+# Modifications copyright (C) 2026 Circle Internet Services, Inc.
 
 ${schedule} ${run_as} ${cmd}
 EOF
@@ -197,7 +197,7 @@ generate_monit_conf() {
     cat > "${monit_conf_dir}/${service_name}.conf${conf_suffix:-}" <<EOF
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
-# Modifications copyright (C) 2023 Circle Internet Services, Inc.
+# Modifications copyright (C) 2026 Circle Internet Services, Inc.
 
 check process ${service_name}
   with pidfile "${pid_file}"
@@ -260,7 +260,7 @@ generate_logrotate_conf() {
     cat <<EOF | sed '/^\s*$/d' > "${logrotate_conf_dir}/${service_name}"
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
-# Modifications copyright (C) 2023 Circle Internet Services, Inc.
+# Modifications copyright (C) 2026 Circle Internet Services, Inc.
 
 ${log_path} {
   ${period}
@@ -408,7 +408,7 @@ generate_systemd_conf() {
     cat > "$service_file" <<EOF
 # Copyright VMware, Inc.
 # SPDX-License-Identifier: APACHE-2.0
-# Modifications copyright (C) 2023 Circle Internet Services, Inc.
+# Modifications copyright (C) 2026 Circle Internet Services, Inc.
 
 [Unit]
 Description=Bitnami service for ${name}
