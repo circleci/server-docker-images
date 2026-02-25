@@ -70,9 +70,10 @@ RUN curl -sSL "https://ftp.samba.org/pub/cwrap/nss_wrapper-${NSS_WRAPPER_VERSION
     make clean
 
 # Install pg_partman
-ENV POSTGRESQL_PG_PARTMAN_VERSION 5.4.2
-RUN curl -sSL "https://github.com/pgpartman/pg_partman/archive/v${POSTGRESQL_PG_PARTMAN_VERSION}.tar.gz" | tar -xz && \
-	cd pg_partman-${POSTGRESQL_PG_PARTMAN_VERSION} && \
+# N.b., pinned to v4.x as v5.x dropped the 'daily' interval type, breaking existing migrations.
+ENV POSTGRESQL_PGPARTMAN_VERSION 4.7.4
+RUN curl -sSL "https://github.com/pgpartman/pg_partman/archive/refs/tags/v${POSTGRESQL_PGPARTMAN_VERSION}.tar.gz" | tar -xz && \
+	cd pg_partman-${POSTGRESQL_PGPARTMAN_VERSION} && \
 	make -j $(nproc) install && \
 	make clean
 
