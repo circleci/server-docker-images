@@ -4,6 +4,8 @@
 
 FROM docker.io/bitnami/minideb:bookworm
 
+ARG MONGODB_VERSION=7.0.15
+
 ENV HOME="/" \
     OS_ARCH="amd64" \
     OS_FLAVOUR="debian-12" \
@@ -31,7 +33,7 @@ RUN mkdir -p /opt/bitnami/common/bin /tmp/downloads && cd /tmp/downloads && \
     tar -xzf mongosh.tgz && \
     cp mongosh-*/bin/* /opt/bitnami/common/bin/ && \
     \
-    curl -L -o mongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian12-7.0.15.tgz && \
+    curl -L -o mongodb.tgz https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-debian12-${MONGODB_VERSION}.tgz && \
     tar -xzf mongodb.tgz && \
     cp mongodb-linux-*/bin/* /opt/bitnami/common/bin/ && \
     \
@@ -45,7 +47,7 @@ RUN find / -perm /6000 -type f -exec chmod a-s {} \; || true
 
 COPY rootfs /
 RUN /opt/bitnami/scripts/mongodb/postunpack.sh
-ENV APP_VERSION="7.0.15" \
+ENV APP_VERSION="${MONGODB_VERSION}" \
     BITNAMI_APP_NAME="mongodb" \
     PATH="/opt/bitnami/common/bin:/opt/bitnami/mongodb/bin:$PATH"
 

@@ -69,8 +69,11 @@ jobs:
             DOCKERFILE_PATH: Dockerfile
             DOCKER_REGISTRY: dockerhub
           command: |
-            NAME="server-$(dirname << parameters.service_path >>)" \
-            MAJOR_VERSION="$(basename << parameters.service_path >>)" \
+            service="$(dirname << parameters.service_path >>)"
+            version="$(grep -m1 "^ARG ${service^^}_VERSION=" Dockerfile | cut -d= -f2)"
+
+            NAME="server-${service}" \
+            MAJOR_VERSION="$(echo "${version}" | cut -d. -f1,2)" \
             << parameters.command >>
       - slack/notify:
           channel: server-alerts

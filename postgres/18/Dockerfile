@@ -10,7 +10,8 @@ ENV POSTGRESQL_BASE_DIR "/opt/bitnami/postgresql"
 ENV PATH="${POSTGRESQL_BASE_DIR}/bin:${PATH}"
 
 # Install PostgreSQL
-ENV POSTGRESQL_VERSION 18.2
+ARG POSTGRES_VERSION=18.2
+ENV POSTGRESQL_VERSION ${POSTGRES_VERSION}
 RUN install_packages bison clang dirmngr flex gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev meson ninja-build postgresql-server-dev-all python3-dev tcl-dev uuid-dev
 RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/postgresql-${POSTGRESQL_VERSION}.tar.gz" | tar -xz && \
 	cd "postgresql-${POSTGRESQL_VERSION}" && \
