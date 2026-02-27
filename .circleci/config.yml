@@ -21,7 +21,7 @@ workflows:
           matrix:
             alias: scan
             parameters:
-              service_path: [postgres/13, rabbitmq/3, redis/6, mongodb/7]
+              service_path: [postgres/13, postgres/18, rabbitmq/3, redis/6, mongodb/7]
           context: "org-global"
           filters:
             branches:
@@ -34,6 +34,7 @@ workflows:
           matrix:
             alias: publish
             parameters:
+              # TODO: Publish and promote postgres/18 after ONPREM-2563
               service_path: [postgres/13, rabbitmq/3, redis/6, mongodb/7]
           context: "org-global"
           filters: &publish_filters
