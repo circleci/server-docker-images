@@ -11,6 +11,7 @@ executors:
         auth:
           username: $DOCKER_HUB_USER
           password: $DOCKER_HUB_PASSWORD
+    resource_class: medium.gen2
 
 workflows:
   my-workflow:
