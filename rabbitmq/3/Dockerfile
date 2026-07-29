@@ -5,7 +5,7 @@
 FROM debian:bookworm-slim AS builder
 
 # renovate: datasource=github-releases depName=erlang/otp extractVersion=^OTP-(?<version>.+)$
-ARG ERLANG_VERSION=27.3.4.10
+ARG ERLANG_VERSION=27.3.4.15
 ARG RABBITMQ_VERSION=3.12.14
 
 # Install build dependencies
