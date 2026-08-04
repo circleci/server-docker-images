@@ -10,7 +10,7 @@ ENV POSTGRESQL_BASE_DIR "/opt/bitnami/postgresql"
 ENV PATH="${POSTGRESQL_BASE_DIR}/bin:${PATH}"
 
 # Install PostgreSQL
-ARG POSTGRES_VERSION=14.22
+ARG POSTGRES_VERSION=14.23
 ENV POSTGRESQL_VERSION ${POSTGRES_VERSION}
 RUN install_packages clang dirmngr gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev postgresql-server-dev-all python3-dev tcl-dev uuid-dev
 RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/postgresql-${POSTGRESQL_VERSION}.tar.gz" | tar -xz && \
@@ -117,7 +117,7 @@ RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
 COPY rootfs /
 RUN /opt/bitnami/scripts/postgresql/postunpack.sh
 RUN /opt/bitnami/scripts/locales/add-extra-locales.sh
-ENV APP_VERSION="14.22.0" \
+ENV APP_VERSION="14.23.0" \
     BITNAMI_APP_NAME="postgresql" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
