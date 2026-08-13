@@ -10,6 +10,7 @@ ENV POSTGRESQL_BASE_DIR "/opt/bitnami/postgresql"
 ENV PATH="${POSTGRESQL_BASE_DIR}/bin:${PATH}"
 
 # Install PostgreSQL
+# renovate: datasource=docker depName=postgres versioning=regex:^(?<major>\d+)\.(?<minor>\d+)$
 ARG POSTGRES_VERSION=14.23
 ENV POSTGRESQL_VERSION ${POSTGRES_VERSION}
 RUN install_packages clang dirmngr gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev postgresql-server-dev-all python3-dev tcl-dev uuid-dev
@@ -43,6 +44,7 @@ RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/post
 	make clean
 
 # Install pgAudit
+# renovate: datasource=github-tags depName=pgaudit/pgaudit versioning=loose
 ENV POSTGRESQL_PGAUDIT_VERSION 1.7.1
 RUN curl -sSL "https://github.com/pgaudit/pgaudit/archive/${POSTGRESQL_PGAUDIT_VERSION}.tar.gz" | tar -xz && \
     cd pgaudit-${POSTGRESQL_PGAUDIT_VERSION} && \
@@ -50,6 +52,7 @@ RUN curl -sSL "https://github.com/pgaudit/pgaudit/archive/${POSTGRESQL_PGAUDIT_V
     make -j $(nproc) USE_PGXS=1 install
 
 # Install pgAutoFailover
+# renovate: datasource=github-tags depName=hapostgres/pg_auto_failover versioning=loose extractVersion=^v(?<version>.+)$
 ENV POSTGRESQL_AUTOCTL_VERSION 2.0
 RUN curl -sSL "https://github.com/citusdata/pg_auto_failover/archive/v${POSTGRESQL_AUTOCTL_VERSION}.tar.gz" | tar -xz && \
     cd pg_auto_failover-${POSTGRESQL_AUTOCTL_VERSION} && \
@@ -58,6 +61,7 @@ RUN curl -sSL "https://github.com/citusdata/pg_auto_failover/archive/v${POSTGRES
     make clean
 
 # Install pgBackRest
+# renovate: datasource=github-tags depName=pgbackrest/pgbackrest versioning=loose extractVersion=^release/(?<version>.+)$
 ENV POSTGRESQL_PGBACKREST_VERSION 2.47
 RUN curl -sSL "https://github.com/pgbackrest/pgbackrest/archive/release/${POSTGRESQL_PGBACKREST_VERSION}.tar.gz" | tar -xz && \
     cd pgbackrest-release-${POSTGRESQL_PGBACKREST_VERSION}/src && \
@@ -65,6 +69,7 @@ RUN curl -sSL "https://github.com/pgbackrest/pgbackrest/archive/release/${POSTGR
     make -j $(nproc) && \
     make -j $(nproc) install
 
+# renovate: datasource=gitlab-tags depName=cwrap/nss_wrapper extractVersion=^nss_wrapper-(?<version>.+)$
 ENV NSS_WRAPPER_VERSION 1.1.16
 RUN install_packages cmake
 RUN curl -sSL "https://ftp.samba.org/pub/cwrap/nss_wrapper-${NSS_WRAPPER_VERSION}.tar.gz" | tar -xz && \
@@ -75,6 +80,7 @@ RUN curl -sSL "https://ftp.samba.org/pub/cwrap/nss_wrapper-${NSS_WRAPPER_VERSION
     make clean
 
 # Install pg_partman
+# renovate: datasource=github-tags depName=pgpartman/pg_partman extractVersion=^v(?<version>.+)$
 ENV POSTGRESQL_PG_PARTMAN_VERSION 4.7.4
 RUN curl -sSL "https://github.com/pgpartman/pg_partman/archive/v${POSTGRESQL_PG_PARTMAN_VERSION}.tar.gz" | tar -xz && \
 	cd pg_partman-${POSTGRESQL_PG_PARTMAN_VERSION} && \

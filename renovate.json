@@ -1,4 +1,86 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>circleci/renovate-config", "github>circleci/renovate-config:default"]
+  "enabled": true,
+  "baseBranchPatterns": [
+    "/^main$/",
+    "/^server-4\\.(9|10)$/"
+  ],
+  "extends": [
+    "config:recommended",
+    "mergeConfidence:all-badges",
+    "abandonments:recommended",
+    ":maintainLockFilesDisabled",
+    ":docker",
+    ":separateMajorReleases",
+    "customManagers:dockerfileVersions"
+  ],
+  "schedule": ["* * * * 0"],
+  "timezone": "America/Toronto",
+  "configMigration": true,
+  "labels": ["renovate"],
+  "vulnerabilityAlerts": {
+    "addLabels": [
+      "CVE",
+      "security"
+    ],
+    "enabled": true
+  },
+  "osvVulnerabilityAlerts": true,
+  "minimumReleaseAge": "7 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
+  "internalChecksFilter": "strict",
+  "prCreation": "not-pending",
+  "packageRules": [
+    {
+      "description": "[inherited]: Set sourceUrl for circleci orbs, so changelogs are included",
+      "matchDatasources": ["orb"],
+      "matchPackageNames": ["circleci/*"],
+      "sourceUrl": "https://github.com/CircleCI-Public/{{ lookup (split packageName '/') 1 }}-orb"
+    },
+    {
+      "description": "Dockerfile-pinned dependency versions (MongoDB, PostgreSQL, RabbitMQ, Redis, Erlang, and the Postgres extensions): propose only the smallest (patch) upgrades. Minor and major are disabled here and selectively re-enabled below.",
+      "matchManagers": ["custom.regex"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "description": "PostgreSQL uses major.minor versioning with no patch component, so a minor bump (e.g. 14.22 -> 14.23) is its smallest possible upgrade. Allow minor; major (14 -> 15) stays disabled by the rule above.",
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["postgres"],
+      "matchUpdateTypes": ["minor"],
+      "enabled": true
+    },
+    {
+      "description": "Fallback: allow a minor upgrade for Dockerfile-pinned versions only when it resolves a vulnerability.",
+      "matchManagers": ["custom.regex"],
+      "matchJsonata": ["$exists(isVulnerabilityAlert) and isVulnerabilityAlert = true"],
+      "matchUpdateTypes": ["minor"],
+      "enabled": true
+    },
+    {
+      "description": "Disable all updates for server branches; CVE/security updates are re-enabled below.",
+      "matchBaseBranches": [
+        "/^server-4\\.(9|10)$/"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Automerge CVE/Security updates for server branches during weekday business hours.",
+      "matchBaseBranches": [
+        "/^server-4\\.(9|10)$/"
+      ],
+      "matchJsonata": ["$exists(isVulnerabilityAlert) and isVulnerabilityAlert = true"],
+      "enabled": true,
+      "automerge": true,
+      "automergeSchedule": [
+        "* 8-17 * * 1-5"
+      ],
+      "addLabels": [
+        "AUTOMERGE",
+        "CVE",
+        "security",
+        "server"
+      ]
+    }
+  ]
 }

@@ -4,8 +4,9 @@
 
 FROM debian:bookworm-slim AS builder
 
-# renovate: datasource=github-releases depName=erlang/otp extractVersion=^OTP-(?<version>.+)$
+# renovate: datasource=github-releases depName=erlang/otp versioning=loose extractVersion=^OTP-(?<version>.+)$
 ARG ERLANG_VERSION=27.3.4.15
+# renovate: datasource=github-releases depName=rabbitmq/rabbitmq-server extractVersion=^v(?<version>.+)$
 ARG RABBITMQ_VERSION=3.12.14
 
 # Install build dependencies
@@ -34,6 +35,7 @@ RUN curl -1sLf https://github.com/rabbitmq/rabbitmq-server/releases/download/v${
 FROM debian:bookworm-slim
 
 ARG TARGETARCH
+# renovate: datasource=github-releases depName=rabbitmq/rabbitmq-server extractVersion=^v(?<version>.+)$
 ARG RABBITMQ_VERSION=3.12.14
 
 LABEL maintainer="On-Prem Team <on-prem@circleci.com>"
