@@ -4,6 +4,7 @@
 
 FROM docker.io/bitnami/minideb:bookworm
 
+# renovate: datasource=github-tags depName=mongodb/mongo extractVersion=^r(?<version>.+)$
 ARG MONGODB_VERSION=7.0.15
 
 ENV HOME="/" \

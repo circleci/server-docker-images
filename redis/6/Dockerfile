@@ -5,6 +5,7 @@
 # Build stage for Redis
 FROM docker.io/bitnami/minideb:buster as redis-builder
 
+# renovate: datasource=github-tags depName=redis/redis
 ARG REDIS_VERSION=6.2.20
 
 RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \

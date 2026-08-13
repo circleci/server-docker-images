@@ -16,6 +16,7 @@ executors:
 workflows:
   my-workflow:
     jobs:
+      - verify-renovate-config
       - image:
           name: "scan-<< matrix.service_path >>"
           command: scan
@@ -52,6 +53,15 @@ workflows:
           filters: *publish_filters
 
 jobs:
+  verify-renovate-config:
+    docker:
+      - image: renovate/renovate:latest
+    steps:
+      - checkout
+      - run:
+          name: "Validate Renovate config"
+          command: renovate-config-validator --strict --no-global renovate.json
+
   image:
     executor: ccc
     parameters:

@@ -10,6 +10,7 @@ ENV POSTGRESQL_BASE_DIR "/opt/bitnami/postgresql"
 ENV PATH="${POSTGRESQL_BASE_DIR}/bin:${PATH}"
 
 # Install PostgreSQL
+# renovate: datasource=docker depName=postgres versioning=regex:^(?<major>\d+)\.(?<minor>\d+)$
 ARG POSTGRES_VERSION=18.4
 ENV POSTGRESQL_VERSION ${POSTGRES_VERSION}
 RUN install_packages bison clang dirmngr flex gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev meson ninja-build postgresql-server-dev-all python3-dev tcl-dev uuid-dev
@@ -39,6 +40,7 @@ RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/post
 	make clean
 
 # Install pgAudit
+# renovate: datasource=github-tags depName=pgaudit/pgaudit versioning=loose
 ENV POSTGRESQL_PGAUDIT_VERSION 18.0
 RUN curl -sSL "https://github.com/pgaudit/pgaudit/archive/${POSTGRESQL_PGAUDIT_VERSION}.tar.gz" | tar -xz && \
     cd pgaudit-${POSTGRESQL_PGAUDIT_VERSION} && \
@@ -54,6 +56,7 @@ RUN curl -sSL "https://github.com/hapostgres/pg_auto_failover/archive/refs/heads
     make clean
 
 # Install pgBackRest
+# renovate: datasource=github-tags depName=pgbackrest/pgbackrest versioning=loose extractVersion=^release/(?<version>.+)$
 ENV POSTGRESQL_PGBACKREST_VERSION 2.58.0
 RUN curl -sSL "https://github.com/pgbackrest/pgbackrest/archive/release/${POSTGRESQL_PGBACKREST_VERSION}.tar.gz" | tar -xz && \
     cd pgbackrest-release-${POSTGRESQL_PGBACKREST_VERSION} && \
@@ -61,6 +64,7 @@ RUN curl -sSL "https://github.com/pgbackrest/pgbackrest/archive/release/${POSTGR
     ninja -C build && \
     ninja -C build install
 
+# renovate: datasource=gitlab-tags depName=cwrap/nss_wrapper extractVersion=^nss_wrapper-(?<version>.+)$
 ENV NSS_WRAPPER_VERSION 1.1.15
 RUN install_packages cmake
 RUN curl -sSL "https://ftp.samba.org/pub/cwrap/nss_wrapper-${NSS_WRAPPER_VERSION}.tar.gz" | tar -xz && \
@@ -72,6 +76,7 @@ RUN curl -sSL "https://ftp.samba.org/pub/cwrap/nss_wrapper-${NSS_WRAPPER_VERSION
 
 # Install pg_partman
 # N.b., pinned to v4.x as v5.x dropped the 'daily' interval type, breaking existing migrations.
+# renovate: datasource=github-tags depName=pgpartman/pg_partman extractVersion=^v(?<version>.+)$
 ENV POSTGRESQL_PGPARTMAN_VERSION 4.7.4
 RUN curl -sSL "https://github.com/pgpartman/pg_partman/archive/refs/tags/v${POSTGRESQL_PGPARTMAN_VERSION}.tar.gz" | tar -xz && \
 	cd pg_partman-${POSTGRESQL_PGPARTMAN_VERSION} && \
