@@ -70,7 +70,7 @@ RUN curl -sSL "https://github.com/pgbackrest/pgbackrest/archive/release/${POSTGR
     make -j $(nproc) install
 
 # renovate: datasource=gitlab-tags depName=cwrap/nss_wrapper extractVersion=^nss_wrapper-(?<version>.+)$
-ENV NSS_WRAPPER_VERSION 1.1.15
+ENV NSS_WRAPPER_VERSION 1.1.16
 RUN install_packages cmake
 RUN curl -sSL "https://ftp.samba.org/pub/cwrap/nss_wrapper-${NSS_WRAPPER_VERSION}.tar.gz" | tar -xz && \
     mkdir -p nss_wrapper-${NSS_WRAPPER_VERSION}.tmp && \
