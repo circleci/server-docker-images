@@ -5,7 +5,7 @@
 FROM debian:bookworm-slim AS builder
 
 # renovate: datasource=github-releases depName=erlang/otp versioning=loose extractVersion=^OTP-(?<version>.+)$
-ARG ERLANG_VERSION=27.3.4.15
+ARG ERLANG_VERSION=27.3.4.17
 # renovate: datasource=github-releases depName=rabbitmq/rabbitmq-server extractVersion=^v(?<version>.+)$
 ARG RABBITMQ_VERSION=3.12.14
 
