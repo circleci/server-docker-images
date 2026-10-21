@@ -6,12 +6,18 @@ FROM buildpack-deps:bullseye as build
 
 COPY prebuildfs /
 
+# Debian 11 is past LTS. Its package pool is only on archive.debian.org now,
+# and the Release files there are expired.
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99archive-debian
+
 ENV POSTGRESQL_BASE_DIR "/opt/bitnami/postgresql"
 ENV PATH="${POSTGRESQL_BASE_DIR}/bin:${PATH}"
 
 # Install PostgreSQL
 # renovate: datasource=docker depName=postgres versioning=regex:^(?<major>\d+)\.(?<minor>\d+)$
-ARG POSTGRES_VERSION=14.23
+ARG POSTGRES_VERSION=14.24
 ENV POSTGRESQL_VERSION ${POSTGRES_VERSION}
 RUN install_packages clang dirmngr gosu gnupg libclang-dev libicu-dev libipc-run-perl libkrb5-dev libldap2-dev liblz4-dev locales libpam-dev libperl-dev libpython3-dev libreadline-dev libssl-dev libxml2-dev libxslt1-dev llvm llvm-dev postgresql-server-dev-all python3-dev tcl-dev uuid-dev
 RUN curl -sSL "https://ftp.postgresql.org/pub/source/v${POSTGRESQL_VERSION}/postgresql-${POSTGRESQL_VERSION}.tar.gz" | tar -xz && \
@@ -105,6 +111,13 @@ ENV HOME="/" \
     OS_NAME="linux"
 
 COPY prebuildfs /
+
+# Debian 11 is past LTS. Its package pool is only on archive.debian.org now,
+# and the Release files there are expired.
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org/debian-security|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99archive-debian
+
 COPY --from=build /opt/bitnami/postgresql /opt/bitnami/postgresql
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Install required system packages and dependencies
@@ -113,6 +126,20 @@ RUN mkdir -p /tmp/bitnami/pkg/cache/ && cd /tmp/bitnami/pkg/cache/
 RUN apt-get autoremove --purge -y curl && \
     apt-get update && apt-get upgrade -y && \
     apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Distrust the two roots that the compromised eMudhra intermediates chain to
+# (CVE-2026-111943). TLS clients here do not check revocation by default, so
+# the CA revoking the intermediates is not enough. The build fails if either
+# root is still present.
+RUN set -eu; \
+    for cert in Comodo_AAA_Services_root emSign_ECC_Root_CA_-_G3; do \
+      sed -i "s|^mozilla/${cert}.crt$|!mozilla/${cert}.crt|" /etc/ca-certificates.conf; \
+    done; \
+    update-ca-certificates --fresh; \
+    for cert in Comodo_AAA_Services_root emSign_ECC_Root_CA_-_G3; do \
+      test ! -e "/etc/ssl/certs/${cert}.pem"; \
+    done
+
 RUN chmod g+rwX /opt/bitnami
 RUN localedef -c -f UTF-8 -i en_US en_US.UTF-8
 RUN update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
@@ -123,7 +150,7 @@ RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && locale-gen
 COPY rootfs /
 RUN /opt/bitnami/scripts/postgresql/postunpack.sh
 RUN /opt/bitnami/scripts/locales/add-extra-locales.sh
-ENV APP_VERSION="14.23.0" \
+ENV APP_VERSION="14.24.0" \
     BITNAMI_APP_NAME="postgresql" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \

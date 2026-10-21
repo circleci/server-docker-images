@@ -62,6 +62,19 @@ RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /
 # Install only runtime dependencies (minimal set)
 RUN install_packages ca-certificates libc6 libssl1.1
 
+# Distrust the two roots that the compromised eMudhra intermediates chain to
+# (CVE-2026-111943). TLS clients here do not check revocation by default, so
+# the CA revoking the intermediates is not enough. The build fails if either
+# root is still present.
+RUN set -eu; \
+    for cert in Comodo_AAA_Services_root emSign_ECC_Root_CA_-_G3; do \
+      sed -i "s|^mozilla/${cert}.crt$|!mozilla/${cert}.crt|" /etc/ca-certificates.conf; \
+    done; \
+    update-ca-certificates --fresh; \
+    for cert in Comodo_AAA_Services_root emSign_ECC_Root_CA_-_G3; do \
+      test ! -e "/etc/ssl/certs/${cert}.pem"; \
+    done
+
 # Copy compiled binaries from build stages (only essentials)
 COPY --from=redis-builder /opt/bitnami/redis/bin /opt/bitnami/redis/bin
 COPY --from=redis-builder /opt/bitnami/redis/etc /opt/bitnami/redis/etc
