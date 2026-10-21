@@ -5,7 +5,7 @@
 FROM debian:bookworm-slim AS builder
 
 # renovate: datasource=github-releases depName=erlang/otp extractVersion=^OTP-(?<version>.+)$
-ARG ERLANG_VERSION=27.3.4.15
+ARG ERLANG_VERSION=27.3.4.19
 ARG RABBITMQ_VERSION=3.12.14
 
 # Install build dependencies
@@ -52,6 +52,19 @@ SHELL ["/bin/bash", "-o", "errexit", "-o", "nounset", "-o", "pipefail", "-c"]
 
 # Install runtime dependencies only
 RUN install_packages ca-certificates curl libgcc-s1 libgnutls30 libssl3 libstdc++6 libtinfo6 locales procps zlib1g
+
+# Distrust the two roots that the compromised eMudhra intermediates chain to
+# (CVE-2026-111943). TLS clients here do not check revocation by default, so
+# the CA revoking the intermediates is not enough. The build fails if either
+# root is still present.
+RUN set -eu; \
+    for cert in Comodo_AAA_Services_root emSign_ECC_Root_CA_-_G3; do \
+      sed -i "s|^mozilla/${cert}.crt$|!mozilla/${cert}.crt|" /etc/ca-certificates.conf; \
+    done; \
+    update-ca-certificates --fresh; \
+    for cert in Comodo_AAA_Services_root emSign_ECC_Root_CA_-_G3; do \
+      test ! -e "/etc/ssl/certs/${cert}.pem"; \
+    done
 
 COPY --from=builder /opt/bitnami/erlang /opt/bitnami/erlang
 COPY --from=builder /opt/bitnami/rabbitmq /opt/bitnami/rabbitmq
