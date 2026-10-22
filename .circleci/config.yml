@@ -49,7 +49,7 @@ workflows:
           context: ["org-global", github-readonly]
           requires:
             - publish
-          promotion_component_list: "circleci/server-mongodb circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/server-kong"
+          promotion_component_list: "circleci/server-mongodb circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/kong"
           filters: *publish_filters
 
 jobs:
@@ -84,6 +84,12 @@ jobs:
               postgres/upgrade_helpers/*)
                 NAME="server-postgres-upgrade"
                 MAJOR_VERSION="$(basename << parameters.service_path >>)"
+                ;;
+              kong/*)
+                # The server chart pulls Kong as circleci/kong, without the server- prefix.
+                version="$(grep -m1 "^ARG KONG_VERSION=" Dockerfile | cut -d= -f2)"
+                NAME="kong"
+                MAJOR_VERSION="$(echo "${version}" | cut -d. -f1,2)"
                 ;;
               *)
                 service="$(dirname << parameters.service_path >>)"
