@@ -80,6 +80,18 @@ jobs:
             DOCKERFILE_PATH: Dockerfile
             MAJOR_VERSION: 7.0
           pwd: mongodb/7.0/debian-12
+  scan_kong:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Scan kong image
+          command: scan
+          environment:
+            NAME: kong
+            DOCKERFILE_PATH: Dockerfile
+            MAJOR_VERSION: 3.4
+          pwd: kong/3
   publish_postgresql:
     executor: ccc
     steps:
@@ -132,6 +144,19 @@ jobs:
             DOCKER_REGISTRY: dockerhub
             MAJOR_VERSION: 7.0
           pwd: mongodb/7.0/debian-12
+  publish_kong:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Build and publish kong image
+          command: publish
+          environment:
+            NAME: kong
+            DOCKERFILE_PATH: Dockerfile
+            DOCKER_REGISTRY: dockerhub
+            MAJOR_VERSION: 3.4
+          pwd: kong/3
 
 workflows:
   my-workflow:
@@ -165,6 +190,13 @@ workflows:
               ignore:
                 - main
                 - /^server-\d\..+/
+      - scan_kong:
+          context: "org-global"
+          filters:
+            branches:
+              ignore:
+                - main
+                - /^server-\d\..+/
       - publish_rabbitmq:
           context: "org-global"
           filters:
@@ -187,6 +219,13 @@ workflows:
                 - main
                 - /^server-\d\..+/
       - publish_mongodb:
+          context: "org-global"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
+      - publish_kong:
           context: "org-global"
           filters:
             branches:
