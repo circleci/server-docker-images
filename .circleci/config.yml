@@ -240,7 +240,8 @@ workflows:
             - publish_postgresql
             - publish_redis
             - publish_mongodb
-          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci/server-redis"
+            - publish_kong
+          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/kong"
           filters:
             branches:
               only:
