@@ -23,7 +23,7 @@ workflows:
           matrix:
             alias: scan
             parameters:
-              service_path: [postgres/13, postgres/14, postgres/18, postgres/upgrade_helpers/12-14, rabbitmq/3, redis/6, mongodb/7, kong/3]
+              service_path: [postgres/13, postgres/14, postgres/18, postgres/upgrade_helpers/12-14, rabbitmq/3, redis/6, mongodb/7]
           context: "org-global"
           filters:
             branches:
@@ -37,7 +37,7 @@ workflows:
             alias: publish
             parameters:
               # TODO: Publish and promote postgres/18 after ONPREM-2563
-              service_path: [postgres/13, postgres/14, postgres/upgrade_helpers/12-14, rabbitmq/3, redis/6, mongodb/7, kong/3]
+              service_path: [postgres/13, postgres/14, postgres/upgrade_helpers/12-14, rabbitmq/3, redis/6, mongodb/7]
           context: "org-global"
           filters: &publish_filters
             branches:
@@ -84,12 +84,6 @@ jobs:
               postgres/upgrade_helpers/*)
                 NAME="server-postgres-upgrade"
                 MAJOR_VERSION="$(basename << parameters.service_path >>)"
-                ;;
-              kong/*)
-                # The server chart pulls Kong as circleci/kong, without the server- prefix.
-                version="$(grep -m1 "^ARG KONG_VERSION=" Dockerfile | cut -d= -f2)"
-                NAME="kong"
-                MAJOR_VERSION="$(echo "${version}" | cut -d. -f1,2)"
                 ;;
               *)
                 service="$(dirname << parameters.service_path >>)"
