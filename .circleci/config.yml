@@ -49,7 +49,7 @@ workflows:
           context: ["org-global", github-readonly]
           requires:
             - publish
-          promotion_component_list: "circleci/server-mongodb circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/kong"
+          promotion_component_list: "circleci/server-mongodb circleci/server-postgres circleci/server-rabbitmq circleci/server-redis"
           filters: *publish_filters
 
 jobs:
