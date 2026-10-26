@@ -6,8 +6,13 @@ FROM kong:${KONG_VERSION}
 # The base image runs as the kong user. Package changes need root.
 USER root
 
+# git and libcurl are the only consumers of libbrotli1 and nothing in Kong uses
+# them at runtime. Ubuntu 22.04 has no patched libbrotli1, so remove it. The
+# build fails if it comes back.
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
-    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    apt-get purge -y git libcurl4 libcurl3-gnutls libbrotli1 && \
+    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives && \
+    ! dpkg -l | grep -q '^ii  libbrotli1'
 
 # Distrust the two roots that the compromised eMudhra intermediates chain to
 # (CVE-2026-111943). TLS clients here do not check revocation by default, so
