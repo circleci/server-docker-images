@@ -92,6 +92,18 @@ jobs:
             DOCKERFILE_PATH: Dockerfile
             MAJOR_VERSION: 3.4
           pwd: kong/3
+  scan_nginx:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Scan server-nginx image
+          command: scan
+          environment:
+            NAME: server-nginx
+            DOCKERFILE_PATH: Dockerfile
+            MAJOR_VERSION: 1.31
+          pwd: nginx/1
   publish_postgresql:
     executor: ccc
     steps:
@@ -157,6 +169,19 @@ jobs:
             DOCKER_REGISTRY: dockerhub
             MAJOR_VERSION: 3.4
           pwd: kong/3
+  publish_nginx:
+    executor: ccc
+    steps:
+      - set_up_container
+      - run:
+          name: Build and publish server-nginx image
+          command: publish
+          environment:
+            NAME: server-nginx
+            DOCKERFILE_PATH: Dockerfile
+            DOCKER_REGISTRY: dockerhub
+            MAJOR_VERSION: 1.31
+          pwd: nginx/1
 
 workflows:
   my-workflow:
@@ -191,6 +216,13 @@ workflows:
                 - main
                 - /^server-\d\..+/
       - scan_kong:
+          context: "org-global"
+          filters:
+            branches:
+              ignore:
+                - main
+                - /^server-\d\..+/
+      - scan_nginx:
           context: "org-global"
           filters:
             branches:
@@ -232,6 +264,13 @@ workflows:
               only:
                 - main
                 - /^server-\d\..+/
+      - publish_nginx:
+          context: "org-global"
+          filters:
+            branches:
+              only:
+                - main
+                - /^server-\d\..+/
       - scotty-orb/test-in-server-and-promote:
           name: test-in-server-and-promote
           context: ["org-global", github-readonly]
@@ -241,7 +280,8 @@ workflows:
             - publish_redis
             - publish_mongodb
             - publish_kong
-          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/kong"
+            - publish_nginx
+          promotion_component_list: "circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/kong circleci/server-nginx"
           filters:
             branches:
               only:
