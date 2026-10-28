@@ -21,7 +21,7 @@ workflows:
           matrix:
             alias: scan
             parameters:
-              service_path: [postgres/13, postgres/18, rabbitmq/3, redis/6, mongodb/7, kong/3]
+              service_path: [postgres/13, postgres/18, rabbitmq/3, redis/6, mongodb/7, kong/3, nginx/1]
           context: "org-global"
           filters:
             branches:
@@ -35,7 +35,7 @@ workflows:
             alias: publish
             parameters:
               # TODO: Publish and promote postgres/18 after ONPREM-2563
-              service_path: [postgres/13, rabbitmq/3, redis/6, mongodb/7, kong/3]
+              service_path: [postgres/13, rabbitmq/3, redis/6, mongodb/7, kong/3, nginx/1]
           context: "org-global"
           filters: &publish_filters
             branches:
@@ -47,7 +47,7 @@ workflows:
           context: ["org-global", github-readonly]
           requires:
             - publish
-          promotion_component_list: "circleci/server-mongodb circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/kong"
+          promotion_component_list: "circleci/server-mongodb circleci/server-postgres circleci/server-rabbitmq circleci/server-redis circleci/kong circleci/server-nginx"
           filters: *publish_filters
 
 jobs:
