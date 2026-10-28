@@ -1,7 +1,7 @@
-# renovate: datasource=docker depName=nginxinc/nginx-unprivileged
-ARG NGINX_VERSION=1.30.1
+# renovate: datasource=docker depName=nginx/nginx-unprivileged
+ARG NGINX_VERSION=1.31.8
 
-FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}
+FROM nginx/nginx-unprivileged:${NGINX_VERSION}
 
 # The base image runs as the unprivileged nginx user (101). Package changes need root.
 USER root
